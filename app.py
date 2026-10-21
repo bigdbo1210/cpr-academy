@@ -44,12 +44,15 @@ INSTRUCTOR_PASSWORD = os.environ.get("ACADEMY_INSTRUCTOR_PASSWORD", "academy123"
 # -----------------------------
 
 COURSES = [
-    {"id": "bls", "name": "BLS for Healthcare Providers", "price": 150, "bank": "cpr", "workflow": "blended",
-     "tag": "Blended: online + skills session",
-     "blurb": "The healthcare-provider standard: high-quality CPR, AED use, and team dynamics for clinical settings."},
+    {"id": "bls", "name": "BLS for Healthcare Providers", "price": 150, "bank": "cpr", "workflow": "aha_blended",
+     "tag": "Official AHA blended — HeartCode online + in-person skills session",
+     "blurb": "The complete official package: your HeartCode BLS online course license, an in-person skills training and evaluation session with Derrick, and your official AHA BLS Provider eCard on successful completion — all included in the $150 price, no extra charge for the skills session or eCard."},
     {"id": "bls-skills", "name": "BLS Skills Check-Off", "price": 80, "bank": "cpr", "workflow": "skills_only",
      "tag": "Skills session only",
      "blurb": "Already finished your online BLS coursework? Book the hands-on skills check-off and finish the job."},
+    {"id": "bls-instructor-led", "name": "BLS Instructor-Led (Full Course, In Person)", "price": 150, "bank": "cpr", "workflow": "instructor_led",
+     "tag": "Instructor-led — full course in person, no online portion",
+     "blurb": "Prefer to learn it all in the room? The complete BLS course taught in person by Derrick — instruction, written examination, and skills testing — ending with the official AHA BLS Provider eCard through the authorized pathway."},
     {"id": "heartsaver-cpr-aed", "name": "Heartsaver CPR AED", "price": 155, "bank": "cpr", "workflow": "blended",
      "tag": "Blended: online + skills session",
      "blurb": "Adult, child, and infant CPR with AED — the workplace and community flagship course."},
@@ -77,8 +80,9 @@ COURSES = [
      "blurb": "Teach what you know. The pathway to leading CPR and first aid classes of your own."},
 ]
 HOW_IT_WORKS = {
-    "bls": "(1) Complete the eight online modules in order and pass the 25-question assessment (80% to pass). (2) Book your hands-on skills session at checkout of the course. (3) Your instructor verifies your skills in person — then your certificate is issued here and can be verified by its code.",
-    "bls-skills": "this is the hands-on finish for students who already completed BLS coursework online. Enroll, then book your skills session — there are no online modules in this course. Bring a photo ID and your online completion record. Your instructor verifies your skills in person, and your certificate is issued here afterward.",
+    "bls-instructor-led": "(1) Enroll and pay $150. (2) Book your in-person class session. (3) Attend the full instructor-led BLS course with Derrick — complete instruction, the written examination, and skills testing, following the current authorized course requirements. (4) Your official AHA BLS Provider eCard is issued through the authorized pathway once every requirement is met. No online license is involved in this course.",
+    "bls": "(1) Pay $150 — the price includes your official HeartCode BLS online license, your in-person skills session, and your AHA BLS Provider eCard; there is no additional charge for the skills session or the eCard. (2) Once your payment is confirmed by our server, your unique HeartCode access code appears in My Courses. (3) Complete the official AHA online course at eLearning.heart.org. (4) Upload your AHA completion certificate here — your instructor verifies it through the official AHA verification service. (5) Book your included in-person skills session. (6) Pass the practice, evaluation, and skills testing; your roster is submitted through our Training Site arrangement, and your official eCard is issued.",
+    "bls-skills": "This is the hands-on finish for students who already completed the official AHA HeartCode BLS online course on their own. Enroll, book your skills session, and upload your official AHA completion certificate — your instructor verifies the completion record before skills testing. Pass the evaluation and your official AHA BLS Provider eCard is issued through the authorized pathway. The $80 covers the skills session and the eCard process; no online license is included or charged.",
     "heartsaver-cpr-aed": "(1) Complete the online modules in order — adult CPR and AED first, then child and infant add-ons — and pass the 15-question assessment (80% to pass). (2) Book your hands-on skills session. (3) Your instructor verifies your skills in person — then your certificate is issued here.",
     "pediatric": "(1) Complete the online modules in order and pass the 15-question assessment (80% to pass). (2) Book your hands-on skills session. (3) Your instructor verifies your skills in person, including child and infant CPR — then your certificate is issued here.",
     "first-aid": "(1) Complete the online modules in order and pass the 15-question assessment (80% to pass). (2) Book your hands-on skills session, where you will practice glove removal, finding the problem, using an epinephrine pen trainer, and controlling bleeding. (3) Your instructor verifies your skills — then your certificate is issued here.",
@@ -92,7 +96,8 @@ HOW_IT_WORKS = {
 POLICY_VERSION = "2026-10-21-v1"  # All-sales-final + rescheduling terms version
 
 PREREQUISITES = {
-    "bls": "None. Designed for healthcare providers and students in clinical programs.",
+    "bls-instructor-led": "None — the complete course is taught in person, including the examination and skills testing.",
+    "bls": "You need internet access to complete the official AHA HeartCode BLS online course at eLearning.heart.org before your skills session. Designed for healthcare providers and students in clinical programs.",
     "bls-skills": "You must have already completed BLS online coursework (with us or another program) and bring your completion record and a photo ID.",
     "heartsaver-cpr-aed": "None.",
     "pediatric": "None. Designed for childcare providers, teachers, coaches, and parents.",
@@ -107,7 +112,9 @@ PREREQUISITES = {
 CREDENTIAL_OFFERED = {
     "online_only": "A Don't Be Ordinary CPR, AED & First Aid Training, LLC online course-completion certificate with a unique verification code. This is not an AHA eCard.",
     "blended": "A Don't Be Ordinary CPR, AED & First Aid Training, LLC course-completion certificate, issued after your instructor verifies your hands-on skills in person. This is not an AHA eCard.",
-    "skills_only": "A Don't Be Ordinary CPR, AED & First Aid Training, LLC course-completion certificate, issued after your instructor verifies your skills at your appointment. This is not an AHA eCard.",
+    "skills_only": "Your official AHA BLS Provider eCard (valid two years). The $80 includes the skills evaluation and the eCard process, issued through the authorized AHA pathway after we verify your official online completion and you pass the skills evaluation.",
+    "aha_blended": "Your official American Heart Association BLS Provider eCard (valid two years), issued through the authorized AHA pathway after you complete the included HeartCode BLS online course and pass your in-person skills evaluation. The $150 includes the online license, the skills session, and the eCard — no additional charge.",
+    "instructor_led": "Your official American Heart Association BLS Provider eCard (valid two years), issued through the authorized AHA pathway after the complete instructor-led course, written examination, and skills testing.",
 }
 
 COURSE_BY_ID = {c["id"]: c for c in COURSES}
@@ -120,6 +127,16 @@ def requires_skills(course):
 
 def is_skills_only(course):
     return course_workflow(course) == "skills_only"
+
+def direct_booking(course):
+    """Courses with no Academy online modules: book the in-person session
+    straight from enrollment (skills-only check-off, instructor-led)."""
+    return course_workflow(course) in ("skills_only", "instructor_led")
+
+OFFICIAL_COURSES = {"bls", "bls-skills", "bls-instructor-led"}  # AHA eCard pathway
+
+def is_official(course):
+    return course["id"] in OFFICIAL_COURSES
 
 MODULE_SETS = {
     "cpr": [
@@ -235,13 +252,40 @@ def course_questions(course):
 DATA_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "academy.json")
 
 def load_store():
+    empty = {"students": [], "enrollments": [], "bookings": [], "licenses": []}
     if not os.path.exists(DATA_FILE):
-        return {"students": [], "enrollments": [], "bookings": []}
+        return empty
     try:
         with open(DATA_FILE, "r") as f:
-            return json.load(f)
+            store = json.load(f)
     except (json.JSONDecodeError, OSError):
-        return {"students": [], "enrollments": [], "bookings": []}
+        return empty
+    for key, val in empty.items():
+        store.setdefault(key, val)
+    return store
+
+UPLOAD_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "uploads")
+ALLOWED_UPLOAD_EXTS = {"pdf", "png", "jpg", "jpeg"}
+
+def assign_license(store, enrollment):
+    """Assign the first available license for the enrollment's course.
+    One license -> one enrollment, never reused. Returns True if assigned."""
+    if enrollment.get("license_id"):
+        return True
+    for lic in store.get("licenses", []):
+        if lic["course_id"] == enrollment["course_id"] and lic["status"] == "available":
+            lic["status"] = "assigned"
+            lic["assigned_to"] = enrollment["id"]
+            lic["assigned_at"] = now_iso()
+            enrollment["license_id"] = lic["id"]
+            return True
+    return False
+
+def license_of(store, enrollment):
+    for lic in store.get("licenses", []):
+        if lic["id"] == enrollment.get("license_id"):
+            return lic
+    return None
 
 def save_store(store):
     os.makedirs(os.path.dirname(DATA_FILE), exist_ok=True)
@@ -287,6 +331,14 @@ def seed_if_empty():
     store["students"].append(student)
     store["enrollments"].append(enrollment)
     store["bookings"].append(booking)
+    # Sample license records for demonstration ONLY — clearly labeled, never
+    # real AHA licenses. Real inventory is entered by the administrator.
+    for i in (1, 2):
+        store.setdefault("licenses", []).append({
+            "id": f"LIC-SAMPLE-{i}", "code": f"SAMPLE-TEST-CODE-00{i}",
+            "kind": "code", "course_id": "bls", "status": "available",
+            "is_sample": True, "note": "Sample record for testing — NOT a real AHA license.",
+            "added_at": ts, "assigned_to": None, "assigned_at": None})
     save_store(store)
 
 # Seed the demo board on hosted demos (ephemeral disk) and locally on first run.
@@ -300,6 +352,11 @@ STATUS_LABELS = {
     "SKILLS_BOOKED": "Skills session booked",
     "SKILLS_PASSED": "Skills verified by instructor",
     "COMPLETE": "Course complete",
+    "AWAITING_LICENSE": "Access code being assigned — it will appear in My Courses",
+    "LICENSE_ASSIGNED": "HeartCode access code assigned — complete your AHA online course",
+    "COMPLETION_SUBMITTED": "Completion certificate submitted — awaiting instructor verification",
+    "VERIFIED": "AHA completion verified — book your skills session",
+    "ECARD_ISSUED": "Official AHA eCard issued",
     "PENDING_PAYMENT": "Payment pending — complete checkout to activate your course",
     "REFUNDED": "Refunded — access suspended (contact us with questions)",
 }
@@ -397,7 +454,7 @@ def enroll(cid):
         store["students"].append(student)
     existing = next((e for e in store["enrollments"]
                      if e["student_id"] == student["id"] and e["course_id"] == cid
-                     and e["status"] != "SKILLS_PASSED"), None)
+                     and e["status"] not in ("SKILLS_PASSED", "ECARD_ISSUED")), None)
     if not existing:
         store["enrollments"].append({
             "id": new_id("ENR"), "student_id": student["id"], "course_id": cid,
@@ -406,6 +463,10 @@ def enroll(cid):
             "policy_version": POLICY_VERSION, "policy_accepted_at": now_iso(),
             "payment_status": "not_required",
         })
+        if course_workflow(course) == "aha_blended":
+            # Off mode: no payment to verify, so assignment is the manual
+            # administrator fallback. In test/live mode the webhook assigns.
+            store["enrollments"][-1]["status"] = "AWAITING_LICENSE"
     save_store(store)
     session["student_id"] = student["id"]
     flash(f"You're enrolled in {course['name']} — welcome, {name.split()[0]}! Your enrollment and policy acknowledgment are on record.")
@@ -443,7 +504,8 @@ def my_courses():
             booking = next((b for b in store["bookings"] if b["enrollment_id"] == e["id"]), None)
             _course = find_course(e["course_id"])
             rows.append({"e": e, "course": _course, "workflow": course_workflow(_course),
-                         "total": 0 if is_skills_only(_course) else len(course_modules(_course)),
+                         "license": license_of(store, e),
+                         "total": 0 if (direct_booking(_course) or course_workflow(_course) == "aha_blended") else len(course_modules(_course)),
                          "label": STATUS_LABELS.get(e["status"], e["status"]), "booking": booking})
     return render_template("my.html", student=student, rows=rows)
 
@@ -472,8 +534,11 @@ def learn(eid):
     if payment_blocked(e):
         flash("This enrollment is waiting on payment confirmation. Once Stripe confirms your payment, your course activates automatically.")
         return redirect(url_for("my_courses"))
-    if is_skills_only(course):
-        flash("This is a skills-only course — there are no online modules. Book your skills session to complete it.")
+    if course_workflow(course) == "aha_blended":
+        flash("Your coursework for this course is the official AHA HeartCode BLS online course at eLearning.heart.org — your access code and instructions are in My Courses.")
+        return redirect(url_for("my_courses"))
+    if direct_booking(course):
+        flash("This course has no online modules — book your in-person session to complete it.")
         return redirect(url_for("book", eid=eid))
     modules = course_modules(course)
     total = len(modules)
@@ -517,6 +582,9 @@ def quiz(eid):
     if payment_blocked(e):
         flash("This enrollment is waiting on payment confirmation.")
         return redirect(url_for("my_courses"))
+    if course_workflow(course) == "aha_blended":
+        flash("Your assessment is inside the official AHA HeartCode BLS online course — there is no separate Academy quiz for this course.")
+        return redirect(url_for("my_courses"))
     questions = course_questions(course)
     total_modules = len(course_modules(course))
     done_count = len({i for i in e["modules_done"] if 0 <= i < total_modules})
@@ -550,6 +618,35 @@ def quiz(eid):
         flash(f"You scored {score}% — 80% is required to pass. Review the modules and try again; your instructor would rather you really know this.")
         return redirect(url_for("quiz", eid=eid))
     return render_template("quiz.html", e=e, course=course, questions=questions)
+
+@app.route("/upload-completion/<eid>", methods=["POST"])
+def upload_completion(eid):
+    store = load_store()
+    e = own_enrollment_or_404(store, eid)
+    if not e:
+        return redirect(url_for("home"))
+    course = find_course(e["course_id"])
+    wf = course_workflow(course)
+    allowed = (wf == "aha_blended" and e["status"] in ("LICENSE_ASSIGNED", "COMPLETION_SUBMITTED")) or \
+              (e["course_id"] == "bls-skills" and e["status"] in ("ENROLLED", "SKILLS_BOOKED"))
+    f = request.files.get("certificate")
+    if not allowed or not f or not f.filename:
+        flash("That upload is not available for this enrollment right now.")
+        return redirect(url_for("my_courses"))
+    ext = f.filename.rsplit(".", 1)[-1].lower() if "." in f.filename else ""
+    if ext not in ALLOWED_UPLOAD_EXTS:
+        flash("Please upload your AHA completion certificate as a PDF or an image (PNG/JPG).")
+        return redirect(url_for("my_courses"))
+    os.makedirs(UPLOAD_DIR, exist_ok=True)
+    fname = f"{eid}.{ext}"
+    f.save(os.path.join(UPLOAD_DIR, fname))
+    e["completion_upload"] = {"filename": fname, "at": now_iso()}
+    e.pop("completion_verified", None)
+    if wf == "aha_blended":
+        e["status"] = "COMPLETION_SUBMITTED"
+    save_store(store)
+    flash("Completion certificate received — your instructor will verify it through the official AHA verification service. Your skills session unlocks once it's verified.")
+    return redirect(url_for("my_courses"))
 
 @app.route("/certificate/<code>")
 def certificate(code):
@@ -620,6 +717,9 @@ def stripe_webhook():
                 and obj.get("amount_total") == int(course["price"]) * 100):
             e["status"] = "ENROLLED"
             e["payment_status"] = "paid"
+            if course_workflow(course) == "aha_blended":
+                # Automatic assignment only after verified payment.
+                e["status"] = "LICENSE_ASSIGNED" if assign_license(store, e) else "AWAITING_LICENSE"
             e["stripe_session_id"] = obj.get("id")
             e["stripe_payment_intent"] = obj.get("payment_intent")
             e["paid_at"] = now_iso()
@@ -656,9 +756,13 @@ def book(eid):
         flash("This enrollment is waiting on payment confirmation.")
         return redirect(url_for("my_courses"))
     bookable = e["status"] in ("ONLINE_COMPLETE", "SKILLS_BOOKED") or (
-        is_skills_only(course) and e["status"] in ("ENROLLED", "LEARNING"))
+        direct_booking(course) and e["status"] in ("ENROLLED", "LEARNING")) or (
+        course_workflow(course) == "aha_blended" and e["status"] == "VERIFIED")
     if not bookable:
-        flash("Complete your online coursework first — then you can book your skills session.")
+        if course_workflow(course) == "aha_blended":
+            flash("Your skills session unlocks after your instructor verifies your AHA online completion — upload your completion certificate in My Courses.")
+        else:
+            flash("Complete your online coursework first — then you can book your skills session.")
         return redirect(url_for("my_courses"))
     days = []
     base = datetime.now(timezone.utc).date()
@@ -732,8 +836,11 @@ def instructor():
         "awaiting": sum(1 for e in store["enrollments"] if e["status"] in ("ONLINE_COMPLETE", "SKILLS_BOOKED")),
         "passed": sum(1 for e in store["enrollments"] if e["status"] == "SKILLS_PASSED"),
         "bookings": len(store["bookings"]),
+        "awaiting_license": sum(1 for e in store["enrollments"] if e["status"] == "AWAITING_LICENSE"),
+        "licenses_available": sum(1 for l in store.get("licenses", []) if l["status"] == "available"),
     }
-    return render_template("instructor.html", rows=rows, stats=stats)
+    return render_template("instructor.html", rows=rows, stats=stats,
+                           licenses=store.get("licenses", []))
 
 @app.route("/instructor/student/<eid>")
 def instructor_student(eid):
@@ -753,6 +860,7 @@ def instructor_student(eid):
         enrolled_date = ""
     return render_template("instructor_student.html", e=e,
                            student=student_of(store, e),
+                           lic=license_of(store, e),
                            course=find_course(e["course_id"]), booking=booking,
                            enrolled_date=enrolled_date,
                            label=STATUS_LABELS.get(e["status"], e["status"]))
@@ -772,6 +880,121 @@ def booking_cancel(eid):
         save_store(store)
     return redirect(url_for("instructor"))
 
+@app.route("/instructor/licenses", methods=["POST"])
+def add_license():
+    if not session.get("instructor"):
+        return redirect(url_for("instructor_login"))
+    code = (request.form.get("code") or "").strip()
+    if not code:
+        flash("Enter the access code or URL exactly as purchased.")
+        return redirect(url_for("instructor"))
+    store = load_store()
+    store.setdefault("licenses", []).append({
+        "id": new_id("LIC"), "code": code,
+        "kind": request.form.get("kind", "code"),
+        "course_id": request.form.get("course_id", "bls"),
+        "status": "available",
+        "is_sample": request.form.get("is_sample") == "yes",
+        "note": (request.form.get("note") or "").strip(),
+        "added_at": now_iso(), "assigned_to": None, "assigned_at": None})
+    save_store(store)
+    flash("License added to inventory as available.")
+    return redirect(url_for("instructor"))
+
+@app.route("/instructor/licenses/<lid>/void", methods=["POST"])
+def void_license(lid):
+    if not session.get("instructor"):
+        return redirect(url_for("instructor_login"))
+    store = load_store()
+    for lic in store.get("licenses", []):
+        if lic["id"] == lid and lic["status"] == "available":
+            lic["status"] = "void"
+    save_store(store)
+    return redirect(url_for("instructor"))
+
+@app.route("/instructor/assign-license/<eid>", methods=["POST"])
+def assign_license_manual(eid):
+    """Manual fulfillment fallback: administrator assigns the next
+    available license to an enrollment awaiting one."""
+    if not session.get("instructor"):
+        return redirect(url_for("instructor_login"))
+    store = load_store()
+    e = find_enrollment(store, eid)
+    if e and e["status"] == "AWAITING_LICENSE" and assign_license(store, e):
+        e["status"] = "LICENSE_ASSIGNED"
+        save_store(store)
+        flash("License assigned.")
+    else:
+        flash("No available license in inventory for this course — add purchased licenses first.")
+    return redirect(url_for("instructor_student", eid=eid))
+
+@app.route("/instructor/verify-completion/<eid>", methods=["POST"])
+def verify_completion(eid):
+    if not session.get("instructor"):
+        return redirect(url_for("instructor_login"))
+    store = load_store()
+    e = find_enrollment(store, eid)
+    if e and e.get("completion_upload"):
+        if request.form.get("decision") == "reject":
+            e.pop("completion_verified", None)
+            e["completion_rejected"] = {"by": "Derrick D. Dennis, Instructor",
+                                        "at": now_iso(),
+                                        "note": (request.form.get("note") or "").strip()}
+            if course_workflow(find_course(e["course_id"])) == "aha_blended":
+                e["status"] = "LICENSE_ASSIGNED"
+            flash("Completion marked NOT verified — the student can re-upload.")
+        else:
+            e["completion_verified"] = {"by": "Derrick D. Dennis, Instructor", "at": now_iso()}
+            e.pop("completion_rejected", None)
+            if course_workflow(find_course(e["course_id"])) == "aha_blended":
+                e["status"] = "VERIFIED"
+            flash("Official completion verified.")
+        save_store(store)
+    return redirect(url_for("instructor_student", eid=eid))
+
+@app.route("/instructor/roster-submit/<eid>", methods=["POST"])
+def roster_submit(eid):
+    if not session.get("instructor"):
+        return redirect(url_for("instructor_login"))
+    store = load_store()
+    e = find_enrollment(store, eid)
+    if e and e["status"] in ("SKILLS_PASSED", "ECARD_ISSUED"):
+        e["roster_status"] = "submitted"
+        e["roster_submitted_at"] = now_iso()
+        save_store(store)
+        flash("Roster marked submitted through the Training Site arrangement.")
+    return redirect(url_for("instructor_student", eid=eid))
+
+@app.route("/instructor/ecard-issue/<eid>", methods=["POST"])
+def ecard_issue(eid):
+    if not session.get("instructor"):
+        return redirect(url_for("instructor_login"))
+    store = load_store()
+    e = find_enrollment(store, eid)
+    if e and e["status"] == "SKILLS_PASSED":
+        if e.get("roster_status") != "submitted":
+            flash("Submit the roster first — the eCard follows the roster through the Training Site.")
+            return redirect(url_for("instructor_student", eid=eid))
+        e["ecard_status"] = "issued"
+        e["ecard_issued_at"] = now_iso()
+        e["status"] = "ECARD_ISSUED"
+        save_store(store)
+        flash("eCard marked issued.")
+    return redirect(url_for("instructor_student", eid=eid))
+
+@app.route("/instructor/completion-file/<eid>")
+def completion_file(eid):
+    if not session.get("instructor"):
+        return redirect(url_for("instructor_login"))
+    store = load_store()
+    e = find_enrollment(store, eid)
+    up = (e or {}).get("completion_upload") or {}
+    path = os.path.join(UPLOAD_DIR, up.get("filename", ""))
+    if not up or not os.path.exists(path):
+        return "No uploaded file on record", 404
+    from flask import send_file
+    return send_file(path)
+
 @app.route("/instructor/skills-pass/<eid>", methods=["POST"])
 def skills_pass(eid):
     if not session.get("instructor"):
@@ -779,10 +1002,23 @@ def skills_pass(eid):
     store = load_store()
     e = find_enrollment(store, eid)
     if e and e["status"] in ("ONLINE_COMPLETE", "SKILLS_BOOKED"):
-        if not e.get("cert_code"):
-            e["cert_code"] = "DBO-2026-" + secrets.token_hex(3).upper()
+        if e["course_id"] in OFFICIAL_COURSES and not e.get("completion_verified"):
+            # Phase 2 rule: official online completion must be verified
+            # before skills testing can be marked complete. (The BLS
+            # blended pathway reaches SKILLS_BOOKED only via VERIFIED, so
+            # this gate bites chiefly for the skills-only check-off.)
+            if e["course_id"] == "bls-skills":
+                flash("Verify this student's official AHA online completion before marking skills passed.")
+                return redirect(url_for("instructor_student", eid=eid))
         if not e.get("completed_at"):
             e["completed_at"] = now_iso()
+        if e["course_id"] not in OFFICIAL_COURSES and not e.get("cert_code"):
+            # Official-pathway students receive the AHA eCard, not an
+            # Academy completion certificate.
+            e["cert_code"] = "DBO-2026-" + secrets.token_hex(3).upper()
+        if e["course_id"] in OFFICIAL_COURSES:
+            e.setdefault("roster_status", "not_submitted")
+            e.setdefault("ecard_status", "pending")
         e["status"] = "SKILLS_PASSED"
         e["skills"] = {"verified_by": "Derrick D. Dennis, Instructor", "at": now_iso()}
         save_store(store)

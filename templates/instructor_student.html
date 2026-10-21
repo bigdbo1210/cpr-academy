@@ -30,6 +30,33 @@
         <div class="kv"><div class="k">Skills Verified</div><div>{{ e.skills.at[:10] }} — by {{ e.skills.verified_by }}</div></div>
         {% endif %}
     </div>
+    {% if course.id in ('bls', 'bls-skills', 'bls-instructor-led') %}
+    <div style="background:#faf7ef; border:1px solid #e4ddcf; border-radius:10px; padding:13px 15px; margin-top:14px;">
+        <strong>Official AHA Pathway</strong>
+        <div style="margin-top:7px; line-height:1.65; font-size:14px;">
+        {% if lic %}License: <code>{{ lic.code[:4] }}…{{ lic.code[-4:] }}</code> ({{ lic.status }}{% if lic.is_sample %}, SAMPLE{% endif %})<br>{% elif e.status == 'AWAITING_LICENSE' %}No license assigned yet.<br>{% endif %}
+        {% if e.completion_upload %}Completion certificate: <a href="{{ url_for('completion_file', eid=e.id) }}" target="_blank">view uploaded file</a> ({{ e.completion_upload.at[:10] }})<br>{% endif %}
+        {% if e.completion_verified %}Completion verified ✓ by {{ e.completion_verified.by }} on {{ e.completion_verified.at[:10] }}{% elif e.completion_rejected %}Completion rejected: {{ e.completion_rejected.note }}{% endif %}
+        {% if e.roster_status %}<br>Roster: <strong>{{ e.roster_status }}</strong>{% if e.roster_submitted_at %} ({{ e.roster_submitted_at[:10] }}){% endif %}{% endif %}
+        {% if e.ecard_status %}<br>eCard: <strong>{{ e.ecard_status }}</strong>{% if e.ecard_issued_at %} ({{ e.ecard_issued_at[:10] }}){% endif %}{% endif %}
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
+        {% if e.status == 'AWAITING_LICENSE' %}
+        <form method="POST" action="{{ url_for('assign_license_manual', eid=e.id) }}"><button class="btn" type="submit">Assign License Manually</button></form>
+        {% endif %}
+        {% if e.completion_upload and not e.completion_verified %}
+        <form method="POST" action="{{ url_for('verify_completion', eid=e.id) }}"><input type="hidden" name="decision" value="verify"><button class="btn gold" type="submit">Verify Official Completion</button></form>
+        <form method="POST" action="{{ url_for('verify_completion', eid=e.id) }}" style="display:flex; gap:6px;"><input type="hidden" name="decision" value="reject"><input type="text" name="note" placeholder="Reason (optional)" style="width:180px;"><button class="btn ghost" type="submit">Reject Upload</button></form>
+        {% endif %}
+        {% if e.status == 'SKILLS_PASSED' and e.roster_status != 'submitted' %}
+        <form method="POST" action="{{ url_for('roster_submit', eid=e.id) }}"><button class="btn" type="submit">Mark Roster Submitted</button></form>
+        {% endif %}
+        {% if e.status == 'SKILLS_PASSED' and e.roster_status == 'submitted' %}
+        <form method="POST" action="{{ url_for('ecard_issue', eid=e.id) }}"><button class="btn gold" type="submit">Mark eCard Issued</button></form>
+        {% endif %}
+        </div>
+    </div>
+    {% endif %}
     <div class="acts">
         {% if e.status in ('ONLINE_COMPLETE', 'SKILLS_BOOKED') %}
         <form method="POST" action="{{ url_for('skills_pass', eid=e.id) }}" onsubmit="return confirm('Confirm: this student demonstrated their skills in person, to standard.');">

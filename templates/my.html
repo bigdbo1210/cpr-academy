@@ -29,7 +29,39 @@ code { background: #f0ece1; padding: 1px 6px; border-radius: 4px; font-size: 13p
         {% if r.e.cert_code %}<br>Completion certificate code: <code>{{ r.e.cert_code }}</code> — {% if r.e.status in ('SKILLS_PASSED', 'COMPLETE') %}<a href="{{ url_for('certificate', code=r.e.cert_code) }}">view certificate</a>{% else %}<a href="{{ url_for('certificate', code=r.e.cert_code) }}">not yet issued — see why</a>{% endif %}{% endif %}
         {% if r.booking %}<br>Skills session: <strong>{{ r.booking.date }}</strong> · {{ r.booking.block }} · 240 Whittington Parkway, Louisville, KY 40222<br>Complimentary reschedule: {% if r.booking.get('reschedules_used', 0) >= 1 %}<strong>used</strong> — a new appointment requires a new booking{% else %}<strong>available</strong> — at least 24 hours before your appointment{% endif %} (<a href="{{ url_for('policy') }}">policy</a>){% endif %}
         {% if r.e.skills %}<br>Skills verified by {{ r.e.skills.verified_by }} — congratulations!{% endif %}
+        {% if r.e.ecard_status == 'issued' %}<br><strong>Official AHA eCard issued</strong>{% if r.e.ecard_issued_at %} on {{ r.e.ecard_issued_at[:10] }}{% endif %} — it is delivered through the AHA (check the email on your AHA account).{% elif r.e.status == 'SKILLS_PASSED' and r.workflow in ('aha_blended', 'skills_only', 'instructor_led') %}<br>Skills verified ✓ — your course roster and official eCard are being processed through our Training Site arrangement.{% endif %}
+        {% if r.e.completion_verified %}<br>Official AHA online completion <strong>verified</strong> ✓{% endif %}
     </div>
+    {% if r.workflow == 'aha_blended' %}
+    <div style="background:#faf7ef; border:1px solid #e4ddcf; border-radius:10px; padding:13px 15px; margin-top:12px;">
+        <strong>Your official AHA pathway</strong>
+        {% if r.e.status == 'AWAITING_LICENSE' %}
+        <p style="margin:7px 0 0; line-height:1.6;">Your HeartCode BLS access code is being assigned and will appear here. (We never promise instant delivery — codes come from purchased license inventory.) Questions: (502) 835-8535.</p>
+        {% elif r.license and r.e.status in ('LICENSE_ASSIGNED', 'COMPLETION_SUBMITTED', 'VERIFIED', 'SKILLS_BOOKED', 'SKILLS_PASSED', 'ECARD_ISSUED') %}
+        <p style="margin:7px 0 0; line-height:1.6;">Your HeartCode BLS access {% if r.license.kind == 'url' %}link{% else %}code{% endif %}: <code style="font-size:14px;">{{ r.license.code }}</code>{% if r.license.is_sample %}<br><em>Sample code for demonstration — not a real AHA license.</em>{% endif %}<br>
+        1) Go to <strong>eLearning.heart.org</strong> and redeem your code to start the official AHA online course. 2) Finish the online course and download your AHA completion certificate. 3) Upload it below — your instructor verifies it, and your included skills session unlocks.</p>
+        {% if r.e.status in ('LICENSE_ASSIGNED', 'COMPLETION_SUBMITTED') %}
+        <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload_completion', eid=r.e.id) }}" style="margin-top:9px;">
+            <label>Upload your AHA completion certificate (PDF or image)</label>
+            <input type="file" name="certificate" accept=".pdf,.png,.jpg,.jpeg" required>
+            <button class="btn" type="submit" style="margin-top:8px;">{% if r.e.status == 'COMPLETION_SUBMITTED' %}Replace Uploaded Certificate{% else %}Upload Certificate{% endif %}</button>
+        </form>
+        {% if r.e.status == 'COMPLETION_SUBMITTED' %}<p style="margin:7px 0 0; color:#5a6a7d;">Received ✓ — awaiting instructor verification.</p>{% endif %}
+        {% if r.e.completion_rejected %}<p style="margin:7px 0 0; color:#9d1b25;">Your last upload could not be verified{% if r.e.completion_rejected.note %}: {{ r.e.completion_rejected.note }}{% endif %} — please upload the official certificate from your AHA account.</p>{% endif %}
+        {% endif %}
+        {% endif %}
+    </div>
+    {% endif %}
+    {% if r.e.course_id == 'bls-skills' and not r.e.completion_verified %}
+    <div style="background:#faf7ef; border:1px solid #e4ddcf; border-radius:10px; padding:13px 15px; margin-top:12px;">
+        <strong>Before your skills session:</strong> upload your official AHA HeartCode BLS completion certificate — your instructor must verify it before your skills can be marked complete.
+        <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload_completion', eid=r.e.id) }}" style="margin-top:9px;">
+            <input type="file" name="certificate" accept=".pdf,.png,.jpg,.jpeg" required>
+            <button class="btn" type="submit" style="margin-top:8px;">Upload AHA Completion Certificate</button>
+        </form>
+        {% if r.e.completion_upload %}<p style="margin:7px 0 0; color:#5a6a7d;">Uploaded ✓ — verification pending.</p>{% endif %}
+    </div>
+    {% endif %}
     <div class="actions">
         {% if r.e.status in ('ENROLLED', 'LEARNING') %}
             <a class="btn" href="{{ url_for('learn', eid=r.e.id) }}">{% if r.e.modules_done %}Continue Learning{% else %}Start Learning{% endif %}</a>
@@ -37,7 +69,7 @@ code { background: #f0ece1; padding: 1px 6px; border-radius: 4px; font-size: 13p
         {% if r.e.modules_done|length >= r.total and r.e.status in ('ENROLLED', 'LEARNING') %}
             <a class="btn gold" href="{{ url_for('quiz', eid=r.e.id) }}">Take the Assessment</a>
         {% endif %}
-        {% if r.e.status == 'ONLINE_COMPLETE' or (r.workflow == 'skills_only' and r.e.status == 'ENROLLED') %}
+        {% if r.e.status in ('ONLINE_COMPLETE', 'VERIFIED') or (r.workflow in ('skills_only', 'instructor_led') and r.e.status == 'ENROLLED') %}
             <a class="btn" href="{{ url_for('book', eid=r.e.id) }}">Book My Skills Session</a>
         {% endif %}
         {% if r.e.status == 'SKILLS_BOOKED' %}

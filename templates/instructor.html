@@ -21,6 +21,38 @@ th { background: #14181d; color: white; font-size: 12px; letter-spacing: 0.6px; 
     <div class="stat"><div class="num">{{ stats.awaiting }}</div><div class="lbl">Awaiting Skills</div></div>
     <div class="stat"><div class="num">{{ stats.bookings }}</div><div class="lbl">Sessions Booked</div></div>
     <div class="stat"><div class="num">{{ stats.passed }}</div><div class="lbl">Skills Verified</div></div>
+    <div class="stat"><div class="num">{{ stats.awaiting_license }}</div><div class="lbl">Awaiting License</div></div>
+    <div class="stat"><div class="num">{{ stats.licenses_available }}</div><div class="lbl">Licenses Available</div></div>
+</div>
+
+<div class="card" style="margin-bottom:18px;">
+    <h3 style="margin-top:0;">HeartCode BLS License Inventory <span class="small">(administrator only — never shown to students)</span></h3>
+    <form method="POST" action="{{ url_for('add_license') }}" style="display:flex; gap:8px; flex-wrap:wrap; align-items:flex-end;">
+        <div style="flex:2 1 260px;"><label>Access code or authorized course URL (exactly as purchased)</label>
+        <input type="text" name="code" required placeholder="Paste the purchased HeartCode code / URL"></div>
+        <div><label>Type</label>
+        <select name="kind"><option value="code">Access code</option><option value="url">Course URL</option></select></div>
+        <div style="flex:1 1 160px;"><label>Note (optional)</label>
+        <input type="text" name="note" placeholder="e.g. ShopCPR order, qty batch"></div>
+        <label style="font-size:12.5px;"><input type="checkbox" name="is_sample" value="yes" style="width:auto;"> Sample/test record</label>
+        <button class="btn" type="submit">Add to Inventory</button>
+    </form>
+    {% if licenses %}
+    <table style="margin-top:12px;">
+        <tr><th>Code / URL</th><th>Course</th><th>Status</th><th>Assigned To</th><th></th></tr>
+        {% for l in licenses %}
+        <tr>
+            <td><code>{{ l.code[:4] }}…{{ l.code[-4:] if l.code|length > 8 else '' }}</code>{% if l.is_sample %} <span class="status">SAMPLE</span>{% endif %}<br><span class="small">{{ l.note }}</span></td>
+            <td>{{ l.course_id }}</td>
+            <td><span class="status{% if l.status == 'assigned' %} done{% endif %}">{{ l.status }}</span></td>
+            <td><span class="small">{{ l.assigned_to or '—' }}{% if l.assigned_at %}<br>{{ l.assigned_at[:10] }}{% endif %}</span></td>
+            <td>{% if l.status == 'available' %}<form method="POST" action="{{ url_for('void_license', lid=l.id) }}"><button class="btn ghost" type="submit" style="padding:5px 10px; font-size:12px;">Void</button></form>{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p class="small" style="margin-bottom:0;">No licenses in inventory. Add purchased HeartCode BLS licenses above; they are assigned automatically after verified payment, or manually from a student's record.</p>
+    {% endif %}
 </div>
 
 <table>
@@ -36,7 +68,7 @@ th { background: #14181d; color: white; font-size: 12px; letter-spacing: 0.6px; 
             <form method="POST" action="{{ url_for('skills_pass', eid=r.e.id) }}" onsubmit="return confirm('Confirm: this student demonstrated their skills in person, to standard.');">
                 <button class="btn gold" type="submit" style="padding:7px 12px; font-size:12.5px;">Mark Skills Passed</button>
             </form>
-            {% elif r.e.status in ('SKILLS_PASSED', 'COMPLETE') %}
+            {% elif r.e.status in ('SKILLS_PASSED', 'COMPLETE', 'ECARD_ISSUED', 'AWAITING_LICENSE', 'LICENSE_ASSIGNED', 'COMPLETION_SUBMITTED', 'VERIFIED') %}
             <a href="{{ url_for('instructor_student', eid=r.e.id) }}">View record &rarr;</a>
             {% else %}
             <span class="small">In coursework</span>
