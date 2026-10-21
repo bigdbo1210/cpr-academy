@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% block extra_css %}
 .cert { background: white; border: 5px solid #10151d; outline: 2px solid #c9a227; outline-offset: -14px; box-shadow: inset 0 0 0 16px white, inset 0 0 0 17px #c8102e, 0 8px 30px rgba(20,24,29,0.16); max-width: 920px; margin: 12px auto; }
-.cert-banner { background: #0b0e13; display: flex; align-items: center; gap: 22px; padding: 22px 34px 18px; border-bottom: 4px solid #c8102e; box-shadow: 0 4px 0 #c9a227; text-align: left; }
-.cert-banner img.mark { height: 96px; width: auto; flex-shrink: 0; }
+.cert-banner { background: #0b0e13; display: flex; align-items: center; gap: 22px; padding: 22px 34px 18px; border-bottom: 4px solid #c8102e; box-shadow: 0 4px 0 #c9a227; text-align: center; }
+.cert-banner img.mark { height: 104px; width: auto; flex-shrink: 0; }
+.cert-banner .btext { flex: 1; }
 .brand-line { color: white; font-weight: 900; font-size: 37px; letter-spacing: 0.5px; line-height: 1.05; font-family: Arial, sans-serif; }
 .brand-line .cpr { color: #e01e26; }
 .brand-sub { color: #f2b134; font-weight: bold; font-size: 15.5px; letter-spacing: 3.2px; margin-top: 6px; }
-.brand-tag { color: #e8e4da; font-size: 11px; letter-spacing: 4.5px; margin-top: 9px; display: flex; align-items: center; gap: 12px; }
+.brand-tag { color: #e8e4da; font-size: 11px; letter-spacing: 4.5px; margin-top: 9px; display: flex; align-items: center; justify-content: center; gap: 12px; }
 .brand-tag .rule { display: inline-block; width: 52px; border-top: 1.5px solid #c9a227; }
 .cert-body { position: relative; padding: 30px 48px 30px; text-align: center; overflow: hidden; }
 .watermark { position: absolute; right: -56px; top: 64px; width: 400px; opacity: 0.055; pointer-events: none; }
@@ -56,7 +57,7 @@
 <div class="cert">
     <div class="cert-banner">
         <img class="mark" src="{{ url_for('static', filename='img/heart.png') }}" alt="Don't Be Ordinary CPR heart logo">
-        <div>
+        <div class="btext">
             <div class="brand-line">DON'T BE ORDINARY <span class="cpr">CPR</span></div>
             <div class="brand-sub">CPR, AED &amp; FIRST AID TRAINING ACADEMY</div>
             <div class="brand-tag"><span class="rule"></span>TRAINING • EMPOWERING • SAVING LIVES<span class="rule"></span></div>
