@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="max-width:520px; margin: 10px auto;">
+    <h2 style="margin-top:0;">Verify a Completion Certificate</h2>
+    <p style="color:#5a6a7d; line-height:1.6;">Employers and schools: enter the verification code printed on the student's completion certificate to see the official record — including whether hands-on skills have been verified by the instructor.</p>
+    <form method="POST" action="{{ url_for('verify') }}">
+        <label>Verification code</label>
+        <input type="text" name="code" placeholder="DBO-2026-XXXX" required>
+        <button class="btn" type="submit" style="margin-top:14px;">Verify</button>
+    </form>
+    <p style="font-size:12.5px; color:#77828f;">Try the sample record: <strong>DBO-2026-0001</strong></p>
+</div>
+{% endblock %}

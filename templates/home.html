@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block extra_css %}
+.hero { background: linear-gradient(120deg, #14181d 55%, #3a1114 100%); color: white; border-radius: 14px; padding: 34px 30px; margin-bottom: 22px; }
+.hero h1 { margin: 0 0 8px; font-size: 30px; letter-spacing: 0.4px; }
+.hero h1 span { color: #f2b134; }
+.hero p { color: #d7dde5; font-size: 15px; max-width: 640px; line-height: 1.55; margin: 0 0 18px; }
+.steps { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 24px; }
+.step { flex: 1 1 220px; background: white; border: 1px solid #e4ddcf; border-top: 5px solid #c22430; border-radius: 10px; padding: 15px 17px; }
+.step .n { font-size: 22px; font-weight: 800; color: #c22430; }
+.step h3 { margin: 4px 0 5px; font-size: 15px; }
+.step p { margin: 0; font-size: 13px; color: #5a6a7d; line-height: 1.5; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.course { background: white; border: 1px solid #e4ddcf; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(20,24,29,0.05); }
+.course h3 { margin: 0 0 4px; font-size: 16.5px; }
+.course .tag { font-size: 11px; font-weight: bold; letter-spacing: 0.6px; text-transform: uppercase; color: #9d1b25; }
+.course p { font-size: 13.5px; color: #5a6a7d; line-height: 1.55; flex: 1; }
+.course .row { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+.price { font-size: 22px; font-weight: 800; color: #14181d; }
+.resume { background: white; border: 1px dashed #c9cfd8; border-radius: 10px; padding: 14px 17px; margin-bottom: 20px; display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+.resume div { flex: 1; min-width: 220px; }
+{% endblock %}
+{% block content %}
+<div class="hero">
+    <h1>Learn Online. Practice In Person. <span>Save a Life.</span></h1>
+    <p>Complete your CPR and first aid coursework online, on your schedule — then prove it hands-on with your instructor in a short skills session. Two milestones, one real certification, zero wasted Saturdays.</p>
+    <a class="btn gold" href="#courses">Explore Courses</a>
+</div>
+
+<div class="steps">
+    <div class="step"><div class="n">1</div><h3>Learn Online</h3><p>Enroll and work through the lessons and assessment online. Pass, and you receive an online course completion certificate with a verifiable code.</p></div>
+    <div class="step"><div class="n">2</div><h3>Book Your Skills Session</h3><p>Pick a hands-on session block that fits your life. Twenty to thirty minutes with your instructor — that's where skill becomes real.</p></div>
+    <div class="step"><div class="n">3</div><h3>Get Certified</h3><p>Your instructor verifies your skills in person, and Don't Be Ordinary CPR issues your official certification. Employers can verify your completion record anytime.</p></div>
+</div>
+
+<form class="resume" method="POST" action="{{ url_for('resume') }}">
+    <div>
+        <label style="margin-top:0;">Already enrolled? Get back to your courses</label>
+        <input type="email" name="email" placeholder="you@example.com" required>
+    </div>
+    <button class="btn ghost" type="submit">Sign Back In</button>
+</form>
+
+<h2 id="courses" style="margin: 6px 0 14px;">Course Catalog</h2>
+<div class="grid">
+    {% for c in courses %}
+    <div class="course">
+        <div class="tag">{{ c.tag }}</div>
+        <h3>{{ c.name }}</h3>
+        <p>{{ c.blurb }}</p>
+        <div class="row">
+            <div class="price">${{ c.price }}</div>
+            <a class="btn" href="{{ url_for('course_detail', cid=c.id) }}">View &amp; Enroll</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

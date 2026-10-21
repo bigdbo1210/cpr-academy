@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block extra_css %}
+.module { background: white; border: 1px solid #e4ddcf; border-radius: 12px; padding: 18px 20px; margin-bottom: 14px; }
+.module h3 { margin: 0 0 8px; font-size: 16.5px; }
+.module p { color: #45536a; line-height: 1.65; font-size: 14.5px; }
+.done-badge { font-size: 11.5px; font-weight: bold; color: #137333; background: #e6f4ea; border-radius: 10px; padding: 2px 9px; margin-left: 8px; vertical-align: 2px; }
+{% endblock %}
+{% block content %}
+<p><a href="{{ url_for('my_courses') }}">&larr; My Courses</a></p>
+<h1 style="margin-top:0;">{{ course.name }}</h1>
+<p style="color:#5a6a7d;">Work through all three modules, then take the assessment. Passing (80%+) earns your online completion certificate and unlocks skills-session booking.</p>
+
+{% for m in modules %}
+<div class="module">
+    <h3>Module {{ loop.index }}: {{ m[0] }}{% if (loop.index0) in e.modules_done %}<span class="done-badge">COMPLETED</span>{% endif %}</h3>
+    <p>{{ m[1] }}</p>
+    <p>{{ m[2] }}</p>
+    {% if (loop.index0) not in e.modules_done %}
+    <form method="POST" action="{{ url_for('module_done', eid=e.id, idx=loop.index0) }}">
+        <button class="btn ghost" type="submit">Mark Module Complete</button>
+    </form>
+    {% endif %}
+</div>
+{% endfor %}
+
+{% if e.modules_done|length >= 3 %}
+<div class="card" style="text-align:center;">
+    <h3 style="margin-top:0;">All modules complete</h3>
+    <p style="color:#5a6a7d;">You're ready for the assessment.</p>
+    <a class="btn gold" href="{{ url_for('quiz', eid=e.id) }}">Take the Assessment</a>
+</div>
+{% endif %}
+{% endblock %}

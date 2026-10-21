@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<p><a href="{{ url_for('home') }}">&larr; All courses</a></p>
+<div class="card">
+    <div style="font-size:11px; font-weight:bold; letter-spacing:0.6px; text-transform:uppercase; color:#9d1b25;">{{ course.tag }}</div>
+    <h1 style="margin:6px 0 8px; font-size:26px;">{{ course.name }}</h1>
+    <p style="color:#5a6a7d; line-height:1.6; max-width:680px;">{{ course.blurb }}</p>
+    <p style="line-height:1.6; max-width:680px;">This course runs in two milestones. <strong>Online:</strong> three short modules and an assessment, finished on your schedule — passing earns an online course completion certificate with a public verification code. <strong>In person:</strong> a hands-on skills session with your instructor, who verifies your skills before Don't Be Ordinary CPR issues your official certification.</p>
+    <div style="font-size:26px; font-weight:800; margin:14px 0 4px;">${{ course.price }} <span style="font-size:13px; font-weight:normal; color:#5a6a7d;">per person</span></div>
+
+    <form method="POST" action="{{ url_for('enroll', cid=course.id) }}" style="max-width:420px;">
+        <label>Your full name</label>
+        <input type="text" name="name" placeholder="Jordan Smith" required>
+        <label>Email</label>
+        <input type="email" name="email" placeholder="you@example.com" required>
+        <p style="font-size:12px; color:#77828f;">Demo checkout — no payment is taken in this demonstration. In the live Academy, enrollment completes through secure payment.</p>
+        <button class="btn" type="submit">Enroll Now</button>
+    </form>
+</div>
+{% endblock %}

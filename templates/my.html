@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block extra_css %}
+.row-card { background: white; border: 1px solid #e4ddcf; border-radius: 12px; padding: 18px 20px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(20,24,29,0.05); }
+.row-card h3 { margin: 0 0 3px; font-size: 17px; }
+.status { display: inline-block; font-size: 12px; font-weight: bold; padding: 3px 11px; border-radius: 11px; background: #eef1f4; color: #3c4a5c; }
+.status.done { background: #fdf3d7; color: #6d5200; }
+.status.passed { background: #e6f4ea; color: #137333; }
+.actions { margin-top: 12px; display: flex; gap: 9px; flex-wrap: wrap; }
+.meta { font-size: 13px; color: #5a6a7d; margin-top: 6px; line-height: 1.55; }
+code { background: #f0ece1; padding: 1px 6px; border-radius: 4px; font-size: 13px; }
+{% endblock %}
+{% block content %}
+{% if not student %}
+<div class="card">
+    <h2 style="margin-top:0;">My Courses</h2>
+    <p style="color:#5a6a7d;">Enroll in a course from the <a href="{{ url_for('home') }}">catalog</a>, or sign back in from the home page with the email you enrolled with.</p>
+</div>
+{% else %}
+<h1 style="margin-top:0;">My Courses — {{ student.name }}</h1>
+{% if not rows %}
+<p style="color:#5a6a7d;">You are not enrolled in anything yet. <a href="{{ url_for('home') }}">Browse the catalog</a> and pick your course.</p>
+{% endif %}
+{% for r in rows %}
+<div class="row-card">
+    <h3>{{ r.course.name }}</h3>
+    <span class="status{% if r.e.status == 'SKILLS_PASSED' %} passed{% elif r.e.status in ('ONLINE_COMPLETE', 'SKILLS_BOOKED') %} done{% endif %}">{{ r.label }}</span>
+    <div class="meta">
+        Progress: {{ r.e.modules_done|length }} of 3 modules{% if r.e.quiz_score is not none %} · Assessment: {{ r.e.quiz_score }}%{% endif %}
+        {% if r.e.cert_code %}<br>Completion certificate code: <code>{{ r.e.cert_code }}</code> — <a href="{{ url_for('certificate', code=r.e.cert_code) }}">view / verify</a>{% endif %}
+        {% if r.booking %}<br>Skills session: <strong>{{ r.booking.date }}</strong> · {{ r.booking.block }} · 240 Whittington Parkway, Louisville, KY 40222{% endif %}
+        {% if r.e.skills %}<br>Skills verified by {{ r.e.skills.verified_by }} — congratulations!{% endif %}
+    </div>
+    <div class="actions">
+        {% if r.e.status in ('ENROLLED', 'LEARNING') %}
+            <a class="btn" href="{{ url_for('learn', eid=r.e.id) }}">{% if r.e.modules_done %}Continue Learning{% else %}Start Learning{% endif %}</a>
+        {% endif %}
+        {% if r.e.modules_done|length >= 3 and r.e.status in ('ENROLLED', 'LEARNING') %}
+            <a class="btn gold" href="{{ url_for('quiz', eid=r.e.id) }}">Take the Assessment</a>
+        {% endif %}
+        {% if r.e.status == 'ONLINE_COMPLETE' %}
+            <a class="btn" href="{{ url_for('book', eid=r.e.id) }}">Book My Skills Session</a>
+        {% endif %}
+        {% if r.e.status == 'SKILLS_BOOKED' %}
+            <a class="btn ghost" href="{{ url_for('book', eid=r.e.id) }}">Change My Session</a>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+<p><a href="{{ url_for('signout') }}">Sign out</a></p>
+{% endif %}
+{% endblock %}

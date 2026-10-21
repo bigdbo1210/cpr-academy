@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="max-width:420px; margin: 20px auto;">
+    <h2 style="margin-top:0; text-align:center;">Instructor Sign In</h2>
+    <form method="POST">
+        <label>Username</label>
+        <input type="text" name="username" autocomplete="username" required>
+        <label>Password</label>
+        <input type="password" name="password" autocomplete="current-password" required>
+        <button class="btn" type="submit" style="width:100%; margin-top:16px;">Sign In</button>
+    </form>
+    <p style="font-size:12px; color:#77828f; text-align:center;">Demo login: <strong>ddennis</strong> / <strong>academy123</strong></p>
+</div>
+{% endblock %}

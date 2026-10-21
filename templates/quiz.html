@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block extra_css %}
+.q { background: white; border: 1px solid #e4ddcf; border-radius: 12px; padding: 16px 20px; margin-bottom: 13px; }
+.q h3 { margin: 0 0 10px; font-size: 15.5px; }
+.q label.opt { display: block; font-weight: normal; font-size: 14px; color: #1c2530; margin: 6px 0; cursor: pointer; }
+.q input { margin-right: 8px; }
+{% endblock %}
+{% block content %}
+<p><a href="{{ url_for('my_courses') }}">&larr; My Courses</a></p>
+<h1 style="margin-top:0;">{{ course.name }} — Assessment</h1>
+<p style="color:#5a6a7d;">Five questions. You need 80% (4 of 5) to pass. Retakes are allowed — your instructor would rather you really know this.</p>
+<form method="POST">
+    {% for q in questions %}
+    <div class="q">
+        <h3>{{ loop.index }}. {{ q[0] }}</h3>
+        {% for opt in q[1] %}
+        <label class="opt"><input type="radio" name="q{{ loop.index0 }}" value="{{ loop.index0 }}" required>{{ opt }}</label>
+        {% endfor %}
+    </div>
+    {% endfor %}
+    <button class="btn" type="submit">Submit Assessment</button>
+</form>
+{% endblock %}

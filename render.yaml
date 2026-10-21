@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: cpr-academy-demo
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: ACADEMY_SEED_DEMO
+        value: "1"
+      - key: ACADEMY_DEBUG
+        value: "0"
