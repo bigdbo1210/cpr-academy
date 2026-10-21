@@ -17,6 +17,9 @@ import json
 import os
 import secrets
 from datetime import datetime, timezone, timedelta
+from zoneinfo import ZoneInfo
+
+LOCAL_TZ = ZoneInfo("America/New_York")  # Derrick's business runs on Louisville time
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("ACADEMY_SECRET_KEY", "academy-dev-secret-key")
@@ -51,7 +54,8 @@ COURSES = [
      "tag": "Blended: online + skills session",
      "blurb": "Safety, first aid, and emergency confidence for the people families trust with their children."},
     {"id": "shaken-baby", "name": "Shaken Baby Syndrome / Abusive Head Trauma", "price": 95, "bank": "knowledge",
-     "tag": "Online + instructor review",
+     "skills": False,
+     "tag": "Online course — no skills session",
      "blurb": "Recognize, prevent, and respond to abusive head trauma — required knowledge for childcare professionals."},
     {"id": "osha", "name": "OSHA Bloodborne Pathogens", "price": 80, "bank": "knowledge",
      "tag": "Online course",
@@ -113,6 +117,56 @@ QUIZ_BANKS = {
          ["Apply butter or ice", "Cool it under running water", "Pop any blisters", "Cover it with a tight bandage immediately"], 1),
     ],
 }
+
+# Per-course content overrides: a course with its own modules and its own
+# assessment lives here; other courses fall back to their bank's shared set.
+# Content is written for the Academy in the instructor's own teaching voice,
+# teaching the established clinical facts of each subject.
+COURSE_CONTENT = {
+    "shaken-baby": {
+        "modules": [
+            ("What Abusive Head Trauma Is",
+             "Abusive head trauma — once called shaken baby syndrome — is a serious brain injury that happens when an infant or young child is shaken violently, struck, thrown, or dropped on purpose. A baby's head is large and heavy compared to the rest of the body, and the neck muscles are weak. That combination lets the brain slam back and forth inside the skull, tearing blood vessels and nerves and causing bleeding, swelling, and bruising of the brain.",
+             "This is child abuse, and it is never a product of normal care. Gentle bouncing on a knee, tossing a toddler in the air, riding in a car over bumps, or an everyday tumble from furniture does NOT cause these injuries. Abusive head trauma almost always happens in a moment when a caregiver loses control — most often over a baby who will not stop crying."),
+            ("Warning Signs and Lasting Harm",
+             "The signs can be easy to miss, because babies cannot tell anyone what happened and there may be no marks on the outside. Warning signs include extreme fussiness or irritability; trouble staying awake; poor feeding; vomiting; pale or bluish skin; a bulging soft spot on the head; pupils that look enlarged or uneven; eyes that cannot focus or follow movement; tremors or seizures; trouble breathing; and, in the worst cases, unconsciousness. Bleeding inside the eyes is a key finding that medical teams look for.",
+             "The harm is often permanent. About one in four children who suffer abusive head trauma die from it, and it is a leading cause of abuse-related death in young children. Many survivors live with cerebral palsy, vision or hearing loss, seizures, developmental delays, or intellectual disability. This is a medical emergency: a child showing these signs needs emergency care right away."),
+            ("Prevention: The Crying Plan",
+             "Abusive head trauma is 100% preventable, and prevention starts before the hard moment arrives. Babies cry — it is their only way to communicate — and in the first months of life there is a peak crying period when the crying is longest and hardest to soothe. When a baby will not stop, first check the basics: hunger, a wet or dirty diaper, temperature, pain, or illness. Then try soothing: feeding, burping, a pacifier, gentle rocking, or a walk.",
+             "If nothing works and your frustration is rising, the safe move is to STOP: put the baby down on their back in a safe place like a crib, walk away for 10 to 15 minutes, and breathe. A crying baby in a safe place is not harmed by crying — but a baby in the hands of an overwhelmed adult can be. Call someone you trust, take turns, and never be afraid to ask for help. Choose every caregiver carefully, tell them plainly that shaking a baby can kill, and never leave a baby with someone who angers easily. It is never — ever — OK to shake, hit, or throw a baby."),
+        ],
+        "questions": [
+            ("What is abusive head trauma?",
+             ["A brain injury caused when a baby is shaken violently or struck", "A condition babies develop from ordinary colic", "An injury from gentle bouncing on a knee", "A normal part of infant development"], 0),
+            ("Why are infants so vulnerable to this injury?",
+             ["Their heads are large and their neck muscles are weak, so the brain can slam inside the skull", "Their skulls have not formed yet", "Their blood does not clot", "They cry more than older children"], 0),
+            ("Which of these can cause abusive head trauma?",
+             ["Riding in a car seat over bumpy roads", "Tossing a baby gently in the air", "Shaking a baby in frustration, even for a few seconds", "A short fall off a couch"], 2),
+            ("Abusive head trauma most often happens when a caregiver is:",
+             ["Feeding the baby", "Frustrated or overwhelmed by a baby who will not stop crying", "Changing a diaper", "At a medical appointment"], 1),
+            ("Which is a warning sign of abusive head trauma?",
+             ["Smiling and cooing", "Vomiting, extreme irritability, and trouble staying awake", "Hiccups after feeding", "Normal crying after a nap"], 1),
+            ("Why can abusive head trauma go unnoticed at first?",
+             ["It causes no symptoms at all", "Its signs can look like a common virus, and there may be no outward marks", "Doctors are not trained to check for it", "It only affects premature babies"], 1),
+            ("How serious is abusive head trauma?",
+             ["It usually heals on its own within a day", "About 1 in 4 children die from it, and many survivors have lifelong disabilities", "It causes brief fussiness only", "It is painful but never dangerous"], 1),
+            ("A baby will not stop crying and you feel overwhelmed. What is the safe move?",
+             ["Shake the baby gently to startle them quiet", "Put the baby down safely in the crib and step away for 10 to 15 minutes", "Hold the baby tighter and keep trying for hours", "Leave the baby alone for the rest of the night"], 1),
+            ("Before leaving your baby with another caregiver, you should:",
+             ["Assume everyone already knows shaking is dangerous", "Tell them plainly that shaking can kill, and choose caregivers who do not anger easily", "Only check that they have a car seat", "Say nothing — it would be impolite"], 1),
+            ("Abusive head trauma is best described as:",
+             ["An unavoidable accident", "100% preventable", "A risk only in daycare centers", "A result of normal play"], 1),
+        ],
+    },
+}
+
+def course_modules(course):
+    cc = COURSE_CONTENT.get(course["id"])
+    return cc["modules"] if cc else MODULE_SETS[course["bank"]]
+
+def course_questions(course):
+    cc = COURSE_CONTENT.get(course["id"])
+    return cc["questions"] if cc else QUIZ_BANKS[course["bank"]]
 
 # -----------------------------
 # Storage (development JSON)
@@ -185,6 +239,7 @@ STATUS_LABELS = {
     "ONLINE_COMPLETE": "Online complete — book your skills session",
     "SKILLS_BOOKED": "Skills session booked",
     "SKILLS_PASSED": "Skills verified by instructor",
+    "COMPLETE": "Course complete",
 }
 
 def current_student(store):
@@ -270,7 +325,9 @@ def my_courses():
     for e in store["enrollments"]:
         if e["student_id"] == student["id"]:
             booking = next((b for b in store["bookings"] if b["enrollment_id"] == e["id"]), None)
-            rows.append({"e": e, "course": find_course(e["course_id"]),
+            _course = find_course(e["course_id"])
+            rows.append({"e": e, "course": _course,
+                         "total": len(course_modules(_course)),
                          "label": STATUS_LABELS.get(e["status"], e["status"]), "booking": booking})
     return render_template("my.html", student=student, rows=rows)
 
@@ -289,7 +346,7 @@ def learn(eid):
         flash("Please enroll or sign back in to continue your course.")
         return redirect(url_for("home"))
     course = find_course(e["course_id"])
-    modules = MODULE_SETS[course["bank"]]
+    modules = course_modules(course)
     total = len(modules)
     done_set = {i for i in e["modules_done"] if 0 <= i < total}
     nxt = 0
@@ -305,7 +362,7 @@ def module_done(eid, idx):
     if not e:
         return redirect(url_for("home"))
     course = find_course(e["course_id"])
-    total = len(MODULE_SETS[course["bank"]])
+    total = len(course_modules(course))
     done_set = {i for i in e["modules_done"] if 0 <= i < total}
     nxt = 0
     while nxt in done_set:
@@ -328,10 +385,10 @@ def quiz(eid):
     if not e:
         return redirect(url_for("home"))
     course = find_course(e["course_id"])
-    questions = QUIZ_BANKS[course["bank"]]
-    total_modules = len(MODULE_SETS[course["bank"]])
+    questions = course_questions(course)
+    total_modules = len(course_modules(course))
     done_count = len({i for i in e["modules_done"] if 0 <= i < total_modules})
-    if e["status"] in ("ONLINE_COMPLETE", "SKILLS_BOOKED", "SKILLS_PASSED"):
+    if e["status"] in ("ONLINE_COMPLETE", "SKILLS_BOOKED", "SKILLS_PASSED", "COMPLETE"):
         flash("You have already passed this assessment — your result is locked in.")
         return redirect(url_for("my_courses"))
     if done_count < total_modules:
@@ -347,10 +404,15 @@ def quiz(eid):
         if score >= 80:
             if not e["cert_code"]:
                 e["cert_code"] = "DBO-2026-" + secrets.token_hex(3).upper()
-            e["status"] = "ONLINE_COMPLETE"
             e["completed_at"] = now_iso()
-            save_store(store)
-            flash(f"You passed with {score}%. Your online completion certificate is ready — now book your hands-on skills session.")
+            if course.get("skills", True):
+                e["status"] = "ONLINE_COMPLETE"
+                save_store(store)
+                flash(f"You passed with {score}%. Your online completion certificate is ready — now book your hands-on skills session.")
+            else:
+                e["status"] = "COMPLETE"
+                save_store(store)
+                flash(f"You passed with {score}%. This course is complete entirely online — no skills session required. Your certificate is ready.")
             return redirect(url_for("my_courses"))
         save_store(store)
         flash(f"You scored {score}% — 80% is required to pass. Review the modules and try again; your instructor would rather you really know this.")
@@ -359,6 +421,7 @@ def quiz(eid):
 
 @app.route("/certificate/<code>")
 def certificate(code):
+    session.pop("_flashes", None)  # the certificate always renders as a clean document
     store = load_store()
     e = next((x for x in store["enrollments"] if x.get("cert_code") == code), None)
     if not e:
@@ -368,13 +431,18 @@ def certificate(code):
     booking = next((b for b in store["bookings"] if b["enrollment_id"] == e["id"]), None)
 
     def fmt_date(iso):
+        # Stored timestamps are UTC; certificates show Louisville dates.
         try:
-            return datetime.fromisoformat(iso).strftime("%B %d, %Y")
+            dt = datetime.fromisoformat(iso)
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            return dt.astimezone(LOCAL_TZ).strftime("%B %d, %Y")
         except (TypeError, ValueError):
             return ""
 
     return render_template("certificate.html", found=True, e=e, student=student,
-                           course=course, booking=booking, code=code,
+                           course=course, code=code,
+                           needs_skills=course.get("skills", True),
                            completed_date=fmt_date(e.get("completed_at")),
                            skills_date=fmt_date(e["skills"]["at"]) if e.get("skills") else "")
 
@@ -455,9 +523,17 @@ def instructor_student(eid):
     if not e:
         return redirect(url_for("instructor"))
     booking = next((b for b in store["bookings"] if b["enrollment_id"] == e["id"]), None)
+    try:
+        _dt = datetime.fromisoformat(e["created_at"])
+        if _dt.tzinfo is None:
+            _dt = _dt.replace(tzinfo=timezone.utc)
+        enrolled_date = _dt.astimezone(LOCAL_TZ).strftime("%B %d, %Y")
+    except (TypeError, ValueError):
+        enrolled_date = ""
     return render_template("instructor_student.html", e=e,
                            student=student_of(store, e),
                            course=find_course(e["course_id"]), booking=booking,
+                           enrolled_date=enrolled_date,
                            label=STATUS_LABELS.get(e["status"], e["status"]))
 
 @app.route("/instructor/skills-pass/<eid>", methods=["POST"])

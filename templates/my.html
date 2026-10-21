@@ -23,9 +23,9 @@ code { background: #f0ece1; padding: 1px 6px; border-radius: 4px; font-size: 13p
 {% for r in rows %}
 <div class="row-card">
     <h3>{{ r.course.name }}</h3>
-    <span class="status{% if r.e.status == 'SKILLS_PASSED' %} passed{% elif r.e.status in ('ONLINE_COMPLETE', 'SKILLS_BOOKED') %} done{% endif %}">{{ r.label }}</span>
+    <span class="status{% if r.e.status in ('SKILLS_PASSED', 'COMPLETE') %} passed{% elif r.e.status in ('ONLINE_COMPLETE', 'SKILLS_BOOKED') %} done{% endif %}">{{ r.label }}</span>
     <div class="meta">
-        Progress: {{ r.e.modules_done|length }} of 3 modules{% if r.e.quiz_score is not none %} · Assessment: {{ r.e.quiz_score }}%{% endif %}
+        Progress: {{ r.e.modules_done|length }} of {{ r.total }} modules{% if r.e.quiz_score is not none %} · Assessment: {{ r.e.quiz_score }}%{% endif %}
         {% if r.e.cert_code %}<br>Completion certificate code: <code>{{ r.e.cert_code }}</code> — <a href="{{ url_for('certificate', code=r.e.cert_code) }}">view / verify</a>{% endif %}
         {% if r.booking %}<br>Skills session: <strong>{{ r.booking.date }}</strong> · {{ r.booking.block }} · 240 Whittington Parkway, Louisville, KY 40222{% endif %}
         {% if r.e.skills %}<br>Skills verified by {{ r.e.skills.verified_by }} — congratulations!{% endif %}
@@ -34,7 +34,7 @@ code { background: #f0ece1; padding: 1px 6px; border-radius: 4px; font-size: 13p
         {% if r.e.status in ('ENROLLED', 'LEARNING') %}
             <a class="btn" href="{{ url_for('learn', eid=r.e.id) }}">{% if r.e.modules_done %}Continue Learning{% else %}Start Learning{% endif %}</a>
         {% endif %}
-        {% if r.e.modules_done|length >= 3 and r.e.status in ('ENROLLED', 'LEARNING') %}
+        {% if r.e.modules_done|length >= r.total and r.e.status in ('ENROLLED', 'LEARNING') %}
             <a class="btn gold" href="{{ url_for('quiz', eid=r.e.id) }}">Take the Assessment</a>
         {% endif %}
         {% if r.e.status == 'ONLINE_COMPLETE' %}

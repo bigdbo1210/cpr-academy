@@ -17,8 +17,8 @@
     <div style="color:#5a6a7d; font-size:14px;">{{ student.email }}</div>
     <div style="margin-top:14px;">
         <div class="kv"><div class="k">Course</div><div>{{ course.name }} — ${{ course.price }}</div></div>
-        <div class="kv"><div class="k">Status</div><div><span class="status{% if e.status == 'SKILLS_PASSED' %} passed{% elif e.status in ('ONLINE_COMPLETE', 'SKILLS_BOOKED') %} done{% endif %}">{{ label }}</span></div></div>
-        <div class="kv"><div class="k">Enrolled</div><div>{{ e.created_at[:10] }}</div></div>
+        <div class="kv"><div class="k">Status</div><div><span class="status{% if e.status in ('SKILLS_PASSED', 'COMPLETE') %} passed{% elif e.status in ('ONLINE_COMPLETE', 'SKILLS_BOOKED') %} done{% endif %}">{{ label }}</span></div></div>
+        <div class="kv"><div class="k">Enrolled</div><div>{{ enrolled_date }}</div></div>
         {% if e.quiz_score is not none %}<div class="kv"><div class="k">Assessment</div><div>{{ e.quiz_score }}%</div></div>{% endif %}
         {% if e.cert_code %}
         <div class="kv"><div class="k">Certificate</div><div>{{ e.cert_code }} —
