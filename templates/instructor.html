@@ -27,7 +27,7 @@ th { background: #14181d; color: white; font-size: 12px; letter-spacing: 0.6px; 
     <tr><th>Student</th><th>Course</th><th>Status</th><th>Skills Session</th><th>Action</th></tr>
     {% for r in rows %}
     <tr>
-        <td><strong>{{ r.student.name }}</strong><br><span class="small">{{ r.student.email }}</span>{% if r.e.cert_code %}<br><span class="small">Cert: {{ r.e.cert_code }} · Quiz {{ r.e.quiz_score }}%</span>{% endif %}</td>
+        <td><a href="{{ url_for('instructor_student', eid=r.e.id) }}"><strong>{{ r.student.name }}</strong></a><br><span class="small">{{ r.student.email }}</span>{% if r.e.cert_code %}<br><span class="small">Cert: {{ r.e.cert_code }} · Quiz {{ r.e.quiz_score }}%</span>{% endif %}</td>
         <td>{{ r.course.name }}<br><span class="small">${{ r.course.price }}</span></td>
         <td><span class="status{% if r.e.status == 'SKILLS_PASSED' %} passed{% elif r.e.status in ('ONLINE_COMPLETE', 'SKILLS_BOOKED') %} done{% endif %}">{{ r.label }}</span>{% if r.e.skills %}<br><span class="small">by {{ r.e.skills.verified_by }}</span>{% endif %}</td>
         <td>{% if r.booking %}{{ r.booking.date }}<br><span class="small">{{ r.booking.block }}</span>{% else %}<span class="small">—</span>{% endif %}</td>
@@ -37,7 +37,7 @@ th { background: #14181d; color: white; font-size: 12px; letter-spacing: 0.6px; 
                 <button class="btn gold" type="submit" style="padding:7px 12px; font-size:12.5px;">Mark Skills Passed</button>
             </form>
             {% elif r.e.status == 'SKILLS_PASSED' %}
-            <span class="small">Complete</span>
+            <a href="{{ url_for('instructor_student', eid=r.e.id) }}">View record &rarr;</a>
             {% else %}
             <span class="small">In coursework</span>
             {% endif %}

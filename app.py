@@ -427,6 +427,20 @@ def instructor():
     }
     return render_template("instructor.html", rows=rows, stats=stats)
 
+@app.route("/instructor/student/<eid>")
+def instructor_student(eid):
+    if not session.get("instructor"):
+        return redirect(url_for("instructor_login"))
+    store = load_store()
+    e = find_enrollment(store, eid)
+    if not e:
+        return redirect(url_for("instructor"))
+    booking = next((b for b in store["bookings"] if b["enrollment_id"] == e["id"]), None)
+    return render_template("instructor_student.html", e=e,
+                           student=student_of(store, e),
+                           course=find_course(e["course_id"]), booking=booking,
+                           label=STATUS_LABELS.get(e["status"], e["status"]))
+
 @app.route("/instructor/skills-pass/<eid>", methods=["POST"])
 def skills_pass(eid):
     if not session.get("instructor"):
