@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="max-width:640px; margin: 20px auto; text-align:center;">
+    <h2 style="margin-top:0;">Certificate Not Yet Issued</h2>
+    <p style="line-height:1.65; color:#3c4a5c;">
+        This record belongs to <strong>{{ student.name }}</strong> for
+        <strong>{{ course.name }}</strong>.<br>
+        Current status: <strong>{{ label }}</strong>
+    </p>
+    <p style="line-height:1.65; color:#5a6a7d;">
+        A Don't Be Ordinary CPR Academy certificate is issued only when every step of the
+        course is complete — required coursework and assessment finished, and, for courses
+        with a hands-on component, skills verified in person by the instructor.
+        Once issued, this page will display the certificate and anyone can verify it by its code.
+    </p>
+    <p style="font-size:12.5px; color:#77828f;">Questions? Call (502) 835-8535.</p>
+</div>
+{% endblock %}

@@ -25,8 +25,8 @@ code { background: #f0ece1; padding: 1px 6px; border-radius: 4px; font-size: 13p
     <h3>{{ r.course.name }}</h3>
     <span class="status{% if r.e.status in ('SKILLS_PASSED', 'COMPLETE') %} passed{% elif r.e.status in ('ONLINE_COMPLETE', 'SKILLS_BOOKED') %} done{% endif %}">{{ r.label }}</span>
     <div class="meta">
-        Progress: {{ r.e.modules_done|length }} of {{ r.total }} modules{% if r.e.quiz_score is not none %} · Assessment: {{ r.e.quiz_score }}%{% endif %}
-        {% if r.e.cert_code %}<br>Completion certificate code: <code>{{ r.e.cert_code }}</code> — <a href="{{ url_for('certificate', code=r.e.cert_code) }}">view / verify</a>{% endif %}
+        {% if r.workflow == 'skills_only' %}Skills-only course — no online modules. Book your session below.{% else %}Progress: {{ r.e.modules_done|length }} of {{ r.total }} modules{% endif %}{% if r.e.quiz_score is not none %} · Assessment: {{ r.e.quiz_score }}%{% endif %}
+        {% if r.e.cert_code %}<br>Completion certificate code: <code>{{ r.e.cert_code }}</code> — {% if r.e.status in ('SKILLS_PASSED', 'COMPLETE') %}<a href="{{ url_for('certificate', code=r.e.cert_code) }}">view certificate</a>{% else %}<a href="{{ url_for('certificate', code=r.e.cert_code) }}">not yet issued — see why</a>{% endif %}{% endif %}
         {% if r.booking %}<br>Skills session: <strong>{{ r.booking.date }}</strong> · {{ r.booking.block }} · 240 Whittington Parkway, Louisville, KY 40222{% endif %}
         {% if r.e.skills %}<br>Skills verified by {{ r.e.skills.verified_by }} — congratulations!{% endif %}
     </div>
@@ -37,7 +37,7 @@ code { background: #f0ece1; padding: 1px 6px; border-radius: 4px; font-size: 13p
         {% if r.e.modules_done|length >= r.total and r.e.status in ('ENROLLED', 'LEARNING') %}
             <a class="btn gold" href="{{ url_for('quiz', eid=r.e.id) }}">Take the Assessment</a>
         {% endif %}
-        {% if r.e.status == 'ONLINE_COMPLETE' %}
+        {% if r.e.status == 'ONLINE_COMPLETE' or (r.workflow == 'skills_only' and r.e.status == 'ENROLLED') %}
             <a class="btn" href="{{ url_for('book', eid=r.e.id) }}">Book My Skills Session</a>
         {% endif %}
         {% if r.e.status == 'SKILLS_BOOKED' %}

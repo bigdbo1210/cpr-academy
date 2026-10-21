@@ -10,7 +10,7 @@ Official credentials are issued by Don't Be Ordinary CPR through its
 normal business process — this demo never fabricates a credential.
 
 Run:  flask --app app run   (or: python app.py)
-Instructor demo login: ddennis / academy123  (DEMO ONLY)
+Instructor login: username ddennis; password set via ACADEMY_INSTRUCTOR_PASSWORD.
 """
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 import json
@@ -25,46 +25,68 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("ACADEMY_SECRET_KEY", "academy-dev-secret-key")
 
 INSTRUCTOR_USER = "ddennis"
-INSTRUCTOR_PASSWORD = "academy123"  # DEMO ONLY
+INSTRUCTOR_PASSWORD = os.environ.get("ACADEMY_INSTRUCTOR_PASSWORD", "academy123")  # set ACADEMY_INSTRUCTOR_PASSWORD in production
 
 # -----------------------------
 # Course catalog (Derrick's real menu + locked prices, 2026-10-20)
 # -----------------------------
 
 COURSES = [
-    {"id": "bls", "name": "BLS for Healthcare Providers", "price": 130, "bank": "cpr",
+    {"id": "bls", "name": "BLS for Healthcare Providers", "price": 150, "bank": "cpr", "workflow": "blended",
      "tag": "Blended: online + skills session",
      "blurb": "The healthcare-provider standard: high-quality CPR, AED use, and team dynamics for clinical settings."},
-    {"id": "bls-skills", "name": "BLS Skills Check-Off", "price": 80, "bank": "cpr",
+    {"id": "bls-skills", "name": "BLS Skills Check-Off", "price": 80, "bank": "cpr", "workflow": "skills_only",
      "tag": "Skills session only",
      "blurb": "Already finished your online BLS coursework? Book the hands-on skills check-off and finish the job."},
-    {"id": "heartsaver-cpr-aed", "name": "Heartsaver CPR AED", "price": 155, "bank": "cpr",
+    {"id": "heartsaver-cpr-aed", "name": "Heartsaver CPR AED", "price": 155, "bank": "cpr", "workflow": "blended",
      "tag": "Blended: online + skills session",
      "blurb": "Adult, child, and infant CPR with AED — the workplace and community flagship course."},
-    {"id": "pediatric", "name": "Heartsaver Pediatric First Aid CPR AED", "price": 155, "bank": "cpr",
+    {"id": "pediatric", "name": "Heartsaver Pediatric First Aid CPR AED", "price": 155, "bank": "cpr", "workflow": "blended",
      "tag": "Blended: online + skills session",
      "blurb": "For childcare providers and parents: pediatric first aid, CPR, and AED with an emphasis on childhood emergencies."},
-    {"id": "first-aid", "name": "Heartsaver First Aid Training", "price": 95, "bank": "knowledge",
+    {"id": "first-aid", "name": "Heartsaver First Aid Training", "price": 95, "bank": "knowledge", "workflow": "blended",
      "tag": "Blended: online + skills session",
      "blurb": "Recognize and respond to the emergencies you are most likely to meet: bleeding, burns, choking, allergic reactions, and more."},
-    {"id": "aed", "name": "AED Training", "price": 95, "bank": "cpr",
+    {"id": "aed", "name": "AED Training", "price": 95, "bank": "cpr", "workflow": "blended",
      "tag": "Blended: online + skills session",
      "blurb": "Focused AED training: pad placement, safety, special situations, and confident, fast response."},
-    {"id": "babysitter", "name": "Babysitters & Nanny Training", "price": 155, "bank": "knowledge",
+    {"id": "babysitter", "name": "Babysitters & Nanny Training", "price": 155, "bank": "knowledge", "workflow": "blended",
      "tag": "Blended: online + skills session",
      "blurb": "Safety, first aid, and emergency confidence for the people families trust with their children."},
     {"id": "shaken-baby", "name": "Shaken Baby Syndrome / Abusive Head Trauma", "price": 95, "bank": "knowledge",
-     "skills": False,
+     "workflow": "online_only",
      "tag": "Online course — no skills session",
      "blurb": "Recognize, prevent, and respond to abusive head trauma — required knowledge for childcare professionals."},
-    {"id": "osha", "name": "OSHA Bloodborne Pathogens", "price": 80, "bank": "knowledge",
-     "tag": "Online course",
+    {"id": "osha", "name": "OSHA Bloodborne Pathogens", "price": 80, "bank": "knowledge", "workflow": "online_only",
+     "tag": "Online only — no skills session",
      "blurb": "Annual bloodborne pathogens training for workplaces: exposure control, PPE, and what to do after an exposure."},
-    {"id": "instructor", "name": "CPR Instructor Course", "price": 600, "bank": "knowledge",
+    {"id": "instructor", "name": "CPR Instructor Course", "price": 600, "bank": "knowledge", "workflow": "blended",
      "tag": "Instructor pathway",
      "blurb": "Teach what you know. The pathway to leading CPR and first aid classes of your own."},
 ]
+HOW_IT_WORKS = {
+    "bls": "How it works: (1) Complete the eight online modules in order and pass the 25-question assessment (80% to pass). (2) Book your hands-on skills session at checkout of the course. (3) Your instructor verifies your skills in person — then your certificate is issued here and can be verified by its code.",
+    "bls-skills": "How it works: this is the hands-on finish for students who already completed BLS coursework online. Enroll, then book your skills session — there are no online modules in this course. Bring a photo ID and your online completion record. Your instructor verifies your skills in person, and your certificate is issued here afterward.",
+    "heartsaver-cpr-aed": "How it works: (1) Complete the online modules in order — adult CPR and AED first, then child and infant add-ons — and pass the 15-question assessment (80% to pass). (2) Book your hands-on skills session. (3) Your instructor verifies your skills in person — then your certificate is issued here.",
+    "pediatric": "How it works: (1) Complete the online modules in order and pass the 15-question assessment (80% to pass). (2) Book your hands-on skills session. (3) Your instructor verifies your skills in person, including child and infant CPR — then your certificate is issued here.",
+    "first-aid": "How it works: (1) Complete the online modules in order and pass the 15-question assessment (80% to pass). (2) Book your hands-on skills session, where you will practice glove removal, finding the problem, using an epinephrine pen trainer, and controlling bleeding. (3) Your instructor verifies your skills — then your certificate is issued here.",
+    "aed": "How it works: (1) Complete the online modules in order and pass the 10-question assessment (80% to pass). (2) Book your hands-on skills session and run live AED drills with your instructor. (3) Once your instructor verifies your skills, your certificate is issued here.",
+    "babysitter": "How it works: (1) Complete the online modules in order and pass the 15-question assessment (80% to pass). (2) Book your in-person session for hands-on practice and review with your instructor. (3) Once that session is verified, your certificate is issued here.",
+    "shaken-baby": "How it works: this course is 100% online — there is no in-person appointment. Complete the three modules in order and pass the 10-question assessment (80% to pass), and your certificate is issued immediately, verifiable by its code.",
+    "osha": "How it works: this course is 100% online — there is no in-person appointment. Complete the four modules in order and pass the 10-question assessment (80% to pass), and your certificate is issued immediately. Bloodborne pathogens training is an annual requirement — plan to retake it each year.",
+    "instructor": "How it works: (1) Complete the online modules in order and pass the 15-question assessment (80% to pass). (2) Book your in-person instructor session, which includes coaching practice and monitored teaching. (3) Once your instructor session is verified, your certificate is issued here.",
+}
+
 COURSE_BY_ID = {c["id"]: c for c in COURSES}
+
+def course_workflow(course):
+    return course.get("workflow", "blended")
+
+def requires_skills(course):
+    return course_workflow(course) != "online_only"
+
+def is_skills_only(course):
+    return course_workflow(course) == "skills_only"
 
 MODULE_SETS = {
     "cpr": [
@@ -160,13 +182,18 @@ COURSE_CONTENT = {
     },
 }
 
+from course_content import CONTENT as _EXTRA_CONTENT
+COURSE_CONTENT.update(_EXTRA_CONTENT)
+
 def course_modules(course):
+    # Every course carries its own content. No shared banks: a course with
+    # no entry here has no modules, by design.
     cc = COURSE_CONTENT.get(course["id"])
-    return cc["modules"] if cc else MODULE_SETS[course["bank"]]
+    return cc["modules"] if cc else []
 
 def course_questions(course):
     cc = COURSE_CONTENT.get(course["id"])
-    return cc["questions"] if cc else QUIZ_BANKS[course["bank"]]
+    return cc["questions"] if cc else []
 
 # -----------------------------
 # Storage (development JSON)
@@ -217,9 +244,9 @@ def seed_if_empty():
     student = {"id": "STU-SAMPLE", "name": "Sample Student", "email": "sample@student.demo", "created_at": ts}
     enrollment = {
         "id": "ENR-SAMPLE", "student_id": student["id"], "course_id": "bls",
-        "status": "SKILLS_BOOKED", "modules_done": [0, 1, 2], "quiz_score": 100,
+        "status": "SKILLS_PASSED", "modules_done": [0, 1, 2, 3, 4, 5, 6, 7], "quiz_score": 100,
         "cert_code": "DBO-2026-0001", "created_at": ts, "completed_at": ts,
-        "skills": None,
+        "skills": {"verified_by": "Derrick D. Dennis, Instructor", "at": ts},
     }
     friday = (datetime.now(timezone.utc) + timedelta(days=3)).strftime("%Y-%m-%d")
     booking = {"id": "BOK-SAMPLE", "enrollment_id": enrollment["id"], "date": friday,
@@ -264,7 +291,9 @@ def course_detail(cid):
     course = find_course(cid)
     if not course:
         return "Course not found", 404
-    return render_template("course.html", course=course)
+    return render_template("course.html", course=course,
+                           how=HOW_IT_WORKS.get(cid, ""),
+                           workflow=course_workflow(course))
 
 @app.route("/enroll/<cid>", methods=["POST"])
 def enroll(cid):
@@ -326,8 +355,8 @@ def my_courses():
         if e["student_id"] == student["id"]:
             booking = next((b for b in store["bookings"] if b["enrollment_id"] == e["id"]), None)
             _course = find_course(e["course_id"])
-            rows.append({"e": e, "course": _course,
-                         "total": len(course_modules(_course)),
+            rows.append({"e": e, "course": _course, "workflow": course_workflow(_course),
+                         "total": 0 if is_skills_only(_course) else len(course_modules(_course)),
                          "label": STATUS_LABELS.get(e["status"], e["status"]), "booking": booking})
     return render_template("my.html", student=student, rows=rows)
 
@@ -346,6 +375,9 @@ def learn(eid):
         flash("Please enroll or sign back in to continue your course.")
         return redirect(url_for("home"))
     course = find_course(e["course_id"])
+    if is_skills_only(course):
+        flash("This is a skills-only course — there are no online modules. Book your skills session to complete it.")
+        return redirect(url_for("book", eid=eid))
     modules = course_modules(course)
     total = len(modules)
     done_set = {i for i in e["modules_done"] if 0 <= i < total}
@@ -405,14 +437,14 @@ def quiz(eid):
             if not e["cert_code"]:
                 e["cert_code"] = "DBO-2026-" + secrets.token_hex(3).upper()
             e["completed_at"] = now_iso()
-            if course.get("skills", True):
+            if requires_skills(course):
                 e["status"] = "ONLINE_COMPLETE"
                 save_store(store)
-                flash(f"You passed with {score}%. Your online completion certificate is ready — now book your hands-on skills session.")
+                flash(f"You passed with {score}%. Now book your hands-on skills session — your certificate is issued after your instructor verifies your skills.")
             else:
                 e["status"] = "COMPLETE"
                 save_store(store)
-                flash(f"You passed with {score}%. This course is complete entirely online — no skills session required. Your certificate is ready.")
+                flash(f"You passed with {score}%. This course is completed entirely online — your certificate is ready.")
             return redirect(url_for("my_courses"))
         save_store(store)
         flash(f"You scored {score}% — 80% is required to pass. Review the modules and try again; your instructor would rather you really know this.")
@@ -429,6 +461,10 @@ def certificate(code):
     student = student_of(store, e)
     course = find_course(e["course_id"])
     booking = next((b for b in store["bookings"] if b["enrollment_id"] == e["id"]), None)
+    if e["status"] not in ("SKILLS_PASSED", "COMPLETE"):
+        return render_template("certificate_pending.html", e=e, student=student,
+                               course=course,
+                               label=STATUS_LABELS.get(e["status"], e["status"]))
 
     def fmt_date(iso):
         # Stored timestamps are UTC; certificates show Louisville dates.
@@ -442,7 +478,7 @@ def certificate(code):
 
     return render_template("certificate.html", found=True, e=e, student=student,
                            course=course, code=code,
-                           needs_skills=course.get("skills", True),
+                           needs_skills=requires_skills(course),
                            completed_date=fmt_date(e.get("completed_at")),
                            skills_date=fmt_date(e["skills"]["at"]) if e.get("skills") else "")
 
@@ -460,7 +496,9 @@ def book(eid):
     if not e:
         return redirect(url_for("home"))
     course = find_course(e["course_id"])
-    if e["status"] not in ("ONLINE_COMPLETE", "SKILLS_BOOKED"):
+    bookable = e["status"] in ("ONLINE_COMPLETE", "SKILLS_BOOKED") or (
+        is_skills_only(course) and e["status"] in ("ENROLLED", "LEARNING"))
+    if not bookable:
         flash("Complete your online coursework first — then you can book your skills session.")
         return redirect(url_for("my_courses"))
     days = []
@@ -477,7 +515,7 @@ def book(eid):
                                   "date": date, "block": block, "created_at": now_iso()})
         e["status"] = "SKILLS_BOOKED"
         save_store(store)
-        flash(f"Skills session booked for {date} — {block}. Bring your completion certificate (code {e['cert_code']}).")
+        flash(f"Skills session booked for {date} — {block}. Bring a photo ID. Your certificate is issued here after your instructor verifies your skills.")
         return redirect(url_for("my_courses"))
     return render_template("book.html", e=e, course=course, days=days, blocks=blocks)
 
@@ -543,6 +581,10 @@ def skills_pass(eid):
     store = load_store()
     e = find_enrollment(store, eid)
     if e and e["status"] in ("ONLINE_COMPLETE", "SKILLS_BOOKED"):
+        if not e.get("cert_code"):
+            e["cert_code"] = "DBO-2026-" + secrets.token_hex(3).upper()
+        if not e.get("completed_at"):
+            e["completed_at"] = now_iso()
         e["status"] = "SKILLS_PASSED"
         e["skills"] = {"verified_by": "Derrick D. Dennis, Instructor", "at": now_iso()}
         save_store(store)
