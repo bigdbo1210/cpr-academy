@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% block extra_css %}
-.cert { background: white; border: 3px solid #14181d; border-radius: 10px; padding: 0 30px 24px; max-width: 700px; margin: 10px auto; text-align: center; box-shadow: 0 6px 24px rgba(20,24,29,0.12); overflow: hidden; }
-.cert-head { background: #10151d; margin: 0 -30px 20px; padding: 20px 30px 16px; display: flex; align-items: center; gap: 20px; text-align: left; }
-.cert-head img { height: 104px; width: auto; border-radius: 6px; }
-.cert-head .t1 { color: white; font-size: 21px; font-weight: 800; line-height: 1.25; }
-.cert-head .t2 { color: #f2b134; font-size: 11.5px; font-weight: bold; letter-spacing: 1.6px; text-transform: uppercase; margin-top: 5px; line-height: 1.5; }
+.cert { background: white; border: 3px solid #14181d; outline: 2px solid #f2b134; outline-offset: -13px; border-radius: 10px; padding: 0 30px 24px; max-width: 700px; margin: 10px auto; text-align: center; box-shadow: 0 6px 24px rgba(20,24,29,0.12); overflow: hidden; }
+.cert-head { background: #10151d; margin: 0 -30px 20px; padding: 20px 30px 16px; display: flex; align-items: center; gap: 18px; text-align: left; }
+.cert-head img.mark { height: 76px; width: auto; }
+.cert-head .bname { color: white; font-size: 19px; font-weight: 800; letter-spacing: 1.5px; line-height: 1.2; }
+.cert-head .bsub { color: #f2b134; font-size: 11.5px; font-weight: bold; letter-spacing: 1.4px; text-transform: uppercase; margin-top: 4px; line-height: 1.5; }
+.cert .certtitle { font-size: 23px; font-weight: 800; margin: 2px 0 12px; color: #14181d; }
 .cert h2 { font-size: 15px; color: #5a6a7d; font-weight: normal; margin: 0 0 4px; }
 .cert .name { font-size: 28px; font-weight: 800; margin: 8px 0 2px; }
 .cert .course { font-size: 17.5px; margin-bottom: 10px; line-height: 1.5; }
@@ -30,13 +31,14 @@
 {% else %}
 <div class="cert">
     <div class="cert-head">
-        <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Don't Be Ordinary CPR, AED & First Aid Training, LLC logo">
+        <img class="mark" src="{{ url_for('static', filename='img/heart.svg') }}" alt="Don't Be Ordinary CPR heart logo">
         <div>
-            <div class="t1">Certificate of Online<br>Course Completion</div>
-            <div class="t2">Don't Be Ordinary CPR, AED &amp; First Aid Training Academy</div>
+            <div class="bname">DON'T BE ORDINARY</div>
+            <div class="bsub">CPR, AED &amp; First Aid Training Academy</div>
         </div>
     </div>
 
+    <div class="certtitle">Certificate of Online Course Completion</div>
     <h2>This verifies that</h2>
     <div class="name">{{ student.name }}</div>
     <div class="course">has completed the online coursework and assessment for<br><strong>{{ course.name }}</strong></div>

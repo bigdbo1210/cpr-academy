@@ -11,10 +11,11 @@
 <p style="color:#5a6a7d;">Five questions. You need 80% (4 of 5) to pass. Retakes are allowed — your instructor would rather you really know this.</p>
 <form method="POST">
     {% for q in questions %}
+    {% set qi = loop.index0 %}
     <div class="q">
         <h3>{{ loop.index }}. {{ q[0] }}</h3>
         {% for opt in q[1] %}
-        <label class="opt"><input type="radio" name="q{{ loop.index0 }}" value="{{ loop.index0 }}" required>{{ opt }}</label>
+        <label class="opt"><input type="radio" name="q{{ qi }}" value="{{ loop.index0 }}" required>{{ opt }}</label>
         {% endfor %}
     </div>
     {% endfor %}
