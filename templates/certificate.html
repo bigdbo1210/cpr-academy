@@ -57,7 +57,7 @@
 {% else %}
 <div class="cert">
     <div class="cert-banner">
-        <img class="mark" src="{{ url_for('static', filename='img/heart.svg') }}" alt="Don't Be Ordinary CPR heart logo">
+        <img class="mark" src="{{ url_for('static', filename='img/heart.png') }}" alt="Don't Be Ordinary CPR heart logo">
         <div>
             <div class="brand-line">DON'T BE ORDINARY <span class="cpr">CPR</span></div>
             <div class="brand-sub">CPR, AED &amp; FIRST AID TRAINING ACADEMY</div>
@@ -65,7 +65,7 @@
         </div>
     </div>
     <div class="cert-body">
-        <img class="watermark" src="{{ url_for('static', filename='img/heart.svg') }}" alt="">
+        <img class="watermark" src="{{ url_for('static', filename='img/heart.png') }}" alt="">
         <div class="certtitle">Certificate of Online Course Completion</div>
         <div class="verifies"><span class="rule-sm"></span>THIS VERIFIES THAT<span class="rule-sm"></span></div>
         <div class="student-name">{{ student.name }}</div>
@@ -77,11 +77,6 @@
             Verification code: <span class="vcode">{{ code }}</span>
         </div>
         <div class="gold-rule"><span class="line"></span><span class="diamond"></span><span class="line"></span></div>
-        {% if e.skills %}
-        <div class="skills-ok"><strong>Hands-On Skills: VERIFIED</strong> by {{ e.skills.verified_by }}{% if skills_date %} on {{ skills_date }}{% endif %}</div>
-        {% elif needs_skills %}
-        <div class="skills-pending">Hands-on skills verification is pending — the online verification record shows the current status.</div>
-        {% endif %}
         <div class="aha">Instruction provided by an American Heart Association–certified instructor.<br>
         <span class="small">Course curriculum follows current American Heart Association guidelines<br>for CPR and emergency cardiovascular care.</span></div>
         <div class="cert-foot">
@@ -92,7 +87,7 @@
             <div class="foot-right">
                 <div class="biz">Don't Be Ordinary CPR, AED &amp;<br>First Aid Training, LLC<br>Louisville, Kentucky</div>
                 <div class="corner">
-                    <img src="{{ url_for('static', filename='img/heart.svg') }}" alt="">
+                    <img src="{{ url_for('static', filename='img/heart.png') }}" alt="">
                     <div class="ctext">DON'T BE<br>ORDINARY<br><span class="red">CPR</span></div>
                 </div>
             </div>
