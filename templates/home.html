@@ -1,9 +1,13 @@
 {% extends "base.html" %}
 {% block extra_css %}
 .hero { background: linear-gradient(120deg, #14181d 55%, #3a1114 100%); color: white; border-radius: 14px; padding: 34px 30px; margin-bottom: 22px; }
+.hero-flex { display: flex; gap: 28px; align-items: center; }
+.hero-poster { width: 290px; max-width: 44vw; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.45); flex: none; }
 .hero h1 { margin: 0 0 8px; font-size: 30px; letter-spacing: 0.4px; }
 .hero h1 span { color: #f2b134; }
 .hero p { color: #d7dde5; font-size: 15px; max-width: 640px; line-height: 1.55; margin: 0 0 18px; }
+.hero p.aha { color: #f2b134; font-size: 13.5px; font-weight: bold; margin: 14px 0 0; }
+@media (max-width: 700px) { .hero-flex { flex-direction: column; } .hero-poster { max-width: 78vw; } }
 .steps { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 24px; }
 .step { flex: 1 1 220px; background: white; border: 1px solid #e4ddcf; border-top: 5px solid #c22430; border-radius: 10px; padding: 15px 17px; }
 .step .n { font-size: 22px; font-weight: 800; color: #c22430; }
@@ -21,9 +25,15 @@
 {% endblock %}
 {% block content %}
 <div class="hero">
-    <h1>Learn Online. Practice In Person. <span>Save a Life.</span></h1>
-    <p>Complete your CPR and first aid coursework online, on your schedule — then prove it hands-on with your instructor in a short skills session. Two milestones, one real certification, zero wasted Saturdays.</p>
-    <a class="btn gold" href="#courses">Explore Courses</a>
+    <div class="hero-flex">
+        <img class="hero-poster" src="{{ url_for('static', filename='img/poster.jpg') }}" alt="Don't Be Ordinary CPR — Get Certified or Renewed Today. Train. Prepare. Save a Life. Louisville, Kentucky.">
+        <div>
+            <h1>Learn Online. Practice In Person. <span>Save a Life.</span></h1>
+            <p>Complete your CPR and first aid coursework online, on your schedule — then prove it hands-on with your instructor in a short skills session. Two milestones, one real certification, zero wasted Saturdays.</p>
+            <a class="btn gold" href="#courses">Explore Courses</a>
+            <p class="aha">All courses taught by an American Heart Association–certified instructor, following current AHA guidelines.</p>
+        </div>
+    </div>
 </div>
 
 <div class="steps">

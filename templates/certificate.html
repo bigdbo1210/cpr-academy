@@ -1,15 +1,25 @@
 {% extends "base.html" %}
 {% block extra_css %}
-.cert { background: white; border: 3px solid #14181d; border-radius: 10px; padding: 30px 30px 24px; max-width: 680px; margin: 10px auto; text-align: center; box-shadow: 0 6px 24px rgba(20,24,29,0.12); }
-.cert .brandline { color: #c22430; font-weight: 800; letter-spacing: 2.5px; font-size: 12px; text-transform: uppercase; }
-.cert h1 { font-size: 25px; margin: 8px 0 2px; }
-.cert h2 { font-size: 16px; color: #5a6a7d; font-weight: normal; margin: 0 0 16px; }
-.cert .name { font-size: 27px; font-weight: 800; margin: 10px 0 2px; }
-.cert .course { font-size: 18px; margin-bottom: 14px; }
-.cert .warn { background: #fdf3d7; border: 1px solid #f2b134; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #6d5200; margin: 16px 0; line-height: 1.55; }
-.cert .ok { background: #e6f4ea; border: 1px solid #188038; border-radius: 8px; padding: 10px 14px; font-size: 13.5px; color: #137333; margin: 16px 0; }
-.cert .code { font-size: 15px; }
+.cert { background: white; border: 3px solid #14181d; border-radius: 10px; padding: 0 30px 24px; max-width: 700px; margin: 10px auto; text-align: center; box-shadow: 0 6px 24px rgba(20,24,29,0.12); overflow: hidden; }
+.cert-head { background: #10151d; margin: 0 -30px 20px; padding: 20px 30px 16px; display: flex; align-items: center; gap: 20px; text-align: left; }
+.cert-head img { height: 104px; width: auto; border-radius: 6px; }
+.cert-head .t1 { color: white; font-size: 21px; font-weight: 800; line-height: 1.25; }
+.cert-head .t2 { color: #f2b134; font-size: 11.5px; font-weight: bold; letter-spacing: 1.6px; text-transform: uppercase; margin-top: 5px; line-height: 1.5; }
+.cert h2 { font-size: 15px; color: #5a6a7d; font-weight: normal; margin: 0 0 4px; }
+.cert .name { font-size: 28px; font-weight: 800; margin: 8px 0 2px; }
+.cert .course { font-size: 17.5px; margin-bottom: 10px; line-height: 1.5; }
+.cert .date { font-size: 14px; color: #3c4a5c; }
+.cert .aha { font-size: 12.5px; color: #77828f; margin-top: 12px; line-height: 1.55; }
+.cert .warn { background: #fdf3d7; border: 1px solid #f2b134; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #6d5200; margin: 16px 0; line-height: 1.55; text-align: left; }
+.cert .ok { background: #e6f4ea; border: 1px solid #188038; border-radius: 8px; padding: 10px 14px; font-size: 13.5px; color: #137333; margin: 16px 0; text-align: left; }
+.cert .code { font-size: 14.5px; }
 .cert code { background: #f0ece1; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
+.sigrow { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-top: 26px; text-align: left; flex-wrap: wrap; }
+.sig-left { font-size: 12px; color: #77828f; line-height: 1.6; }
+.sigbox { min-width: 250px; text-align: center; }
+.sig-name { font-family: "Brush Script MT", "Segoe Script", "Lucida Handwriting", cursive; font-size: 31px; color: #14213d; transform: rotate(-2deg); margin-bottom: -4px; }
+.sig-line { border-top: 1.5px solid #14181d; padding-top: 5px; font-size: 12.5px; color: #3c4a5c; line-height: 1.5; }
+@media (max-width: 560px) { .cert-head { flex-direction: column; text-align: center; } .sigrow { justify-content: center; } }
 {% endblock %}
 {% block content %}
 {% if not found %}
@@ -19,22 +29,40 @@
 </div>
 {% else %}
 <div class="cert">
-    <div class="brandline">Don't Be Ordinary CPR Academy</div>
-    <h1>Certificate of Online Course Completion</h1>
+    <div class="cert-head">
+        <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Don't Be Ordinary CPR, AED & First Aid Training, LLC logo">
+        <div>
+            <div class="t1">Certificate of Online<br>Course Completion</div>
+            <div class="t2">Don't Be Ordinary CPR, AED &amp; First Aid Training Academy</div>
+        </div>
+    </div>
+
     <h2>This verifies that</h2>
     <div class="name">{{ student.name }}</div>
     <div class="course">has completed the online coursework and assessment for<br><strong>{{ course.name }}</strong></div>
-    <div class="code">Verification code: <code>{{ code }}</code> · Assessment score: {{ e.quiz_score }}%</div>
+    {% if completed_date %}<div class="date">Completed on {{ completed_date }} · Assessment score: {{ e.quiz_score }}%</div>{% endif %}
+    <div class="code" style="margin-top:8px;">Verification code: <code>{{ code }}</code></div>
+
+    <div class="aha">Instruction provided by an <strong>American Heart Association–certified instructor</strong>. Course curriculum follows current American Heart Association guidelines for CPR and emergency cardiovascular care.</div>
 
     {% if e.skills %}
-    <div class="ok"><strong>Hands-On Skills: VERIFIED</strong> by {{ e.skills.verified_by }}. This student has completed both milestones at Don't Be Ordinary CPR.</div>
+    <div class="ok"><strong>Hands-On Skills: VERIFIED</strong> by {{ e.skills.verified_by }}{% if skills_date %} on {{ skills_date }}{% endif %}. This student has completed both milestones at Don't Be Ordinary CPR.</div>
     {% elif booking %}
     <div class="warn"><strong>Skills session booked:</strong> {{ booking.date }} · {{ booking.block }}. Certification is issued only after the instructor verifies hands-on skills at that session.</div>
     {% else %}
     <div class="warn"><strong>Important:</strong> this is an <u>online completion certificate only — it is not a certification card</u>. The student must still complete an in-person hands-on skills session with an authorized instructor before certification is issued.</div>
     {% endif %}
 
-    <p style="font-size:12px; color:#77828f;">Verify this record anytime at this page. Issued by Don't Be Ordinary CPR, AED &amp; First Aid Training, LLC · Louisville, Kentucky.</p>
+    <div class="sigrow">
+        <div class="sig-left">
+            Verify this record anytime on the Academy's<br>public verification page using the code above.<br>
+            Issued by Don't Be Ordinary CPR, AED &amp;<br>First Aid Training, LLC · Louisville, Kentucky
+        </div>
+        <div class="sigbox">
+            <div class="sig-name">Derrick D. Dennis</div>
+            <div class="sig-line"><strong>Derrick D. Dennis</strong>, Instructor<br>American Heart Association Certified Instructor</div>
+        </div>
+    </div>
 </div>
 {% endif %}
 {% endblock %}

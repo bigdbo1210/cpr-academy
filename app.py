@@ -347,8 +347,17 @@ def certificate(code):
     student = student_of(store, e)
     course = find_course(e["course_id"])
     booking = next((b for b in store["bookings"] if b["enrollment_id"] == e["id"]), None)
+
+    def fmt_date(iso):
+        try:
+            return datetime.fromisoformat(iso).strftime("%B %d, %Y")
+        except (TypeError, ValueError):
+            return ""
+
     return render_template("certificate.html", found=True, e=e, student=student,
-                           course=course, booking=booking, code=code)
+                           course=course, booking=booking, code=code,
+                           completed_date=fmt_date(e.get("completed_at")),
+                           skills_date=fmt_date(e["skills"]["at"]) if e.get("skills") else "")
 
 @app.route("/verify", methods=["GET", "POST"])
 def verify():
