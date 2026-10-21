@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="max-width:600px; margin: 20px auto; text-align:center;">
+    {% if state == 'success' %}
+    <h2 style="margin-top:0;">Thank You — Payment Received by Stripe</h2>
+    <p style="line-height:1.65; color:#3c4a5c;">Stripe is confirming your payment with us now. Your course access activates automatically as soon as that confirmation lands (usually seconds). Head to <a href="{{ url_for('my_courses') }}">My Courses</a> — if your course is not active within a few minutes, call (502) 835-8535 and we will sort it out.</p>
+    {% else %}
+    <h2 style="margin-top:0;">Checkout Canceled</h2>
+    <p style="line-height:1.65; color:#3c4a5c;">No payment was taken and your enrollment was not activated. You can return to the <a href="{{ url_for('home') }}">course catalog</a> whenever you're ready, or call (502) 835-8535 with questions.</p>
+    {% endif %}
+</div>
+{% endblock %}

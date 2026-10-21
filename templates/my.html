@@ -27,7 +27,7 @@ code { background: #f0ece1; padding: 1px 6px; border-radius: 4px; font-size: 13p
     <div class="meta">
         {% if r.workflow == 'skills_only' %}Skills-only course — no online modules. Book your session below.{% else %}Progress: {{ r.e.modules_done|length }} of {{ r.total }} modules{% endif %}{% if r.e.quiz_score is not none %} · Assessment: {{ r.e.quiz_score }}%{% endif %}
         {% if r.e.cert_code %}<br>Completion certificate code: <code>{{ r.e.cert_code }}</code> — {% if r.e.status in ('SKILLS_PASSED', 'COMPLETE') %}<a href="{{ url_for('certificate', code=r.e.cert_code) }}">view certificate</a>{% else %}<a href="{{ url_for('certificate', code=r.e.cert_code) }}">not yet issued — see why</a>{% endif %}{% endif %}
-        {% if r.booking %}<br>Skills session: <strong>{{ r.booking.date }}</strong> · {{ r.booking.block }} · 240 Whittington Parkway, Louisville, KY 40222{% endif %}
+        {% if r.booking %}<br>Skills session: <strong>{{ r.booking.date }}</strong> · {{ r.booking.block }} · 240 Whittington Parkway, Louisville, KY 40222<br>Complimentary reschedule: {% if r.booking.get('reschedules_used', 0) >= 1 %}<strong>used</strong> — a new appointment requires a new booking{% else %}<strong>available</strong> — at least 24 hours before your appointment{% endif %} (<a href="{{ url_for('policy') }}">policy</a>){% endif %}
         {% if r.e.skills %}<br>Skills verified by {{ r.e.skills.verified_by }} — congratulations!{% endif %}
     </div>
     <div class="actions">

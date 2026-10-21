@@ -5,17 +5,40 @@
     <div style="font-size:11px; font-weight:bold; letter-spacing:0.6px; text-transform:uppercase; color:#9d1b25;">{{ course.tag }}</div>
     <h1 style="margin:6px 0 8px; font-size:26px;">{{ course.name }}</h1>
     <p style="color:#5a6a7d; line-height:1.6; max-width:680px;">{{ course.blurb }}</p>
-    <p style="line-height:1.6; max-width:680px;">{{ how }}</p>
-    <p style="font-size:12.5px; color:#77828f; line-height:1.6; max-width:680px;">This Academy course is independently developed and taught by an American Heart Association–certified instructor, following current AHA guidelines. It is not an AHA-approved course, and completing it does not by itself earn an AHA eCard; official AHA eCards are issued only through the American Heart Association after an authorized AHA course and in-person skills evaluation.</p>
+    <p style="line-height:1.6; max-width:680px;"><strong>How it works:</strong> {{ how }}</p>
+
+    <div style="background:#faf7ef; border:1px solid #e4ddcf; border-radius:10px; padding:14px 16px; max-width:680px; margin:14px 0;">
+        <div style="font-weight:bold; margin-bottom:6px;">Before you enroll — the facts for this course</div>
+        <ul style="margin:0; padding-left:18px; line-height:1.65; font-size:14px;">
+            <li><strong>Format:</strong> {{ course.tag }}.</li>
+            <li><strong>Prerequisites:</strong> {{ prereq }}</li>
+            <li><strong>Document you receive:</strong> {{ credential }}</li>
+            <li><strong>Acceptance:</strong> Verify with your employer or licensing body that this course meets your requirement before purchasing.</li>
+            <li><strong>Sales policy:</strong> ALL SALES ARE FINAL — no voluntary refunds. Full terms, including the required exceptions (duplicate or incorrect charges, undelivered training, and refunds required by law), are in our <a href="{{ url_for('policy') }}">Sales &amp; Rescheduling Policy</a>.</li>
+            {% if workflow != 'online_only' %}<li><strong>Rescheduling:</strong> One complimentary reschedule per skills-session reservation, requested at least 24 hours before your appointment. Details in the policy.</li>{% endif %}
+        </ul>
+    </div>
+
+    <p style="font-size:12.5px; color:#77828f; line-height:1.6; max-width:680px;">This course is independently developed and taught by an American Heart Association–certified instructor, following current AHA guidelines. It is not an AHA-approved course, and the online assessment here is our own knowledge check — it is not an official AHA examination, and completing this course does not by itself earn an AHA eCard. Official AHA eCards are issued only through the American Heart Association after an authorized AHA course and in-person skills evaluation.</p>
     <div style="font-size:26px; font-weight:800; margin:14px 0 4px;">${{ course.price }} <span style="font-size:13px; font-weight:normal; color:#5a6a7d;">per person</span></div>
 
+    {% if course.get('enrollment_open', True) %}
     <form method="POST" action="{{ url_for('enroll', cid=course.id) }}" style="max-width:420px;">
         <label>Your full name</label>
         <input type="text" name="name" placeholder="Jordan Smith" required>
         <label>Email</label>
         <input type="email" name="email" placeholder="you@example.com" required>
+        <label style="display:flex; gap:8px; align-items:flex-start; font-size:13px; line-height:1.5; margin-top:12px;">
+            <input type="checkbox" name="ack" value="yes" required style="width:auto; margin-top:3px;">
+            <span>I have read the disclosures above — the course format, prerequisites, the document I will receive, the <strong>All Sales Are Final</strong> policy, and the rescheduling terms{% if workflow != 'online_only' %}{% endif %} — and I agree to them. <span style="color:#77828f;">(Policy version {{ policy_version }}; your acknowledgment is recorded with your enrollment.)</span></span>
+        </label>
         <p style="font-size:12px; color:#77828f;">Secure checkout opens with our production launch — enrolling today reserves your seat and takes no payment.</p>
         <button class="btn" type="submit">Enroll Now</button>
     </form>
+    {% else %}
+    <div style="background:#f3efe6; border:1px solid #e4ddcf; border-radius:10px; padding:14px 16px; max-width:680px;">
+        <strong>Registration is not open yet.</strong> This course is in final preparation — its credential pathway and terms are being approved before enrollment opens. Call <strong>(502) 835-8535</strong> to ask about it or be notified when registration opens.
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

@@ -9,3 +9,11 @@ services:
         value: "1"
       - key: ACADEMY_DEBUG
         value: "0"
+      - key: ACADEMY_PAYMENTS
+        value: "off"
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: ACADEMY_INSTRUCTOR_PASSWORD
+        sync: false

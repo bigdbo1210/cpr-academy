@@ -1,5 +1,5 @@
 """
-Don't Be Ordinary CPR Academy — blended-learning demo.
+Don't Be Ordinary CPR, AED & First Aid Training, LLC — course platform.
 
 Students enroll, learn online, pass a quiz, and receive an ONLINE COURSE
 COMPLETION certificate with a public verification code. That is milestone
@@ -23,6 +23,18 @@ LOCAL_TZ = ZoneInfo("America/New_York")  # Derrick's business runs on Louisville
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("ACADEMY_SECRET_KEY", "academy-dev-secret-key")
+
+# Payments: "off" (default) | "test" | "live". Live mode is never enabled
+# by code alone — Derrick approves the switch and supplies live keys via
+# the hosting environment. Stripe secrets live ONLY in environment vars.
+PAYMENTS_MODE = os.environ.get("ACADEMY_PAYMENTS", "off")
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
+STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
+
+def _stripe():
+    import stripe  # lazy import: the app runs fine without the package in off mode
+    stripe.api_key = STRIPE_SECRET_KEY
+    return stripe
 
 INSTRUCTOR_USER = "ddennis"
 INSTRUCTOR_PASSWORD = os.environ.get("ACADEMY_INSTRUCTOR_PASSWORD", "academy123")  # set ACADEMY_INSTRUCTOR_PASSWORD in production
@@ -60,21 +72,42 @@ COURSES = [
     {"id": "osha", "name": "OSHA Bloodborne Pathogens", "price": 80, "bank": "knowledge", "workflow": "online_only",
      "tag": "Online only — no skills session",
      "blurb": "Annual bloodborne pathogens training for workplaces: exposure control, PPE, and what to do after an exposure."},
-    {"id": "instructor", "name": "CPR Instructor Course", "price": 600, "bank": "knowledge", "workflow": "blended",
+    {"id": "instructor", "name": "CPR Instructor Course", "price": 600, "bank": "knowledge", "workflow": "blended", "enrollment_open": False,
      "tag": "Instructor pathway",
      "blurb": "Teach what you know. The pathway to leading CPR and first aid classes of your own."},
 ]
 HOW_IT_WORKS = {
-    "bls": "How it works: (1) Complete the eight online modules in order and pass the 25-question assessment (80% to pass). (2) Book your hands-on skills session at checkout of the course. (3) Your instructor verifies your skills in person — then your certificate is issued here and can be verified by its code.",
-    "bls-skills": "How it works: this is the hands-on finish for students who already completed BLS coursework online. Enroll, then book your skills session — there are no online modules in this course. Bring a photo ID and your online completion record. Your instructor verifies your skills in person, and your certificate is issued here afterward.",
-    "heartsaver-cpr-aed": "How it works: (1) Complete the online modules in order — adult CPR and AED first, then child and infant add-ons — and pass the 15-question assessment (80% to pass). (2) Book your hands-on skills session. (3) Your instructor verifies your skills in person — then your certificate is issued here.",
-    "pediatric": "How it works: (1) Complete the online modules in order and pass the 15-question assessment (80% to pass). (2) Book your hands-on skills session. (3) Your instructor verifies your skills in person, including child and infant CPR — then your certificate is issued here.",
-    "first-aid": "How it works: (1) Complete the online modules in order and pass the 15-question assessment (80% to pass). (2) Book your hands-on skills session, where you will practice glove removal, finding the problem, using an epinephrine pen trainer, and controlling bleeding. (3) Your instructor verifies your skills — then your certificate is issued here.",
-    "aed": "How it works: (1) Complete the online modules in order and pass the 10-question assessment (80% to pass). (2) Book your hands-on skills session and run live AED drills with your instructor. (3) Once your instructor verifies your skills, your certificate is issued here.",
-    "babysitter": "How it works: (1) Complete the online modules in order and pass the 15-question assessment (80% to pass). (2) Book your in-person session for hands-on practice and review with your instructor. (3) Once that session is verified, your certificate is issued here.",
-    "shaken-baby": "How it works: this course is 100% online — there is no in-person appointment. Complete the three modules in order and pass the 10-question assessment (80% to pass), and your certificate is issued immediately, verifiable by its code.",
-    "osha": "How it works: this course is 100% online — there is no in-person appointment. Complete the four modules in order and pass the 10-question assessment (80% to pass), and your certificate is issued immediately. Bloodborne pathogens training is an annual requirement — plan to retake it each year.",
-    "instructor": "How it works: (1) Complete the online modules in order and pass the 15-question assessment (80% to pass). (2) Book your in-person instructor session, which includes coaching practice and monitored teaching. (3) Once your instructor session is verified, your certificate is issued here.",
+    "bls": "(1) Complete the eight online modules in order and pass the 25-question assessment (80% to pass). (2) Book your hands-on skills session at checkout of the course. (3) Your instructor verifies your skills in person — then your certificate is issued here and can be verified by its code.",
+    "bls-skills": "this is the hands-on finish for students who already completed BLS coursework online. Enroll, then book your skills session — there are no online modules in this course. Bring a photo ID and your online completion record. Your instructor verifies your skills in person, and your certificate is issued here afterward.",
+    "heartsaver-cpr-aed": "(1) Complete the online modules in order — adult CPR and AED first, then child and infant add-ons — and pass the 15-question assessment (80% to pass). (2) Book your hands-on skills session. (3) Your instructor verifies your skills in person — then your certificate is issued here.",
+    "pediatric": "(1) Complete the online modules in order and pass the 15-question assessment (80% to pass). (2) Book your hands-on skills session. (3) Your instructor verifies your skills in person, including child and infant CPR — then your certificate is issued here.",
+    "first-aid": "(1) Complete the online modules in order and pass the 15-question assessment (80% to pass). (2) Book your hands-on skills session, where you will practice glove removal, finding the problem, using an epinephrine pen trainer, and controlling bleeding. (3) Your instructor verifies your skills — then your certificate is issued here.",
+    "aed": "(1) Complete the online modules in order and pass the 10-question assessment (80% to pass). (2) Book your hands-on skills session and run live AED drills with your instructor. (3) Once your instructor verifies your skills, your certificate is issued here.",
+    "babysitter": "(1) Complete the online modules in order and pass the 15-question assessment (80% to pass). (2) Book your in-person session for hands-on practice and review with your instructor. (3) Once that session is verified, your certificate is issued here.",
+    "shaken-baby": "this course is 100% online — there is no in-person appointment. Complete the three modules in order and pass the 10-question assessment (80% to pass), and your certificate is issued immediately, verifiable by its code.",
+    "osha": "this course is 100% online — there is no in-person appointment. Complete the four modules in order and pass the 10-question assessment (80% to pass), and your certificate is issued immediately. Bloodborne pathogens training is an annual requirement — plan to retake it each year.",
+    "instructor": "(1) Complete the online modules in order and pass the 15-question assessment (80% to pass). (2) Book your in-person instructor session, which includes coaching practice and monitored teaching. (3) Once your instructor session is verified, your certificate is issued here.",
+}
+
+POLICY_VERSION = "2026-10-21-v1"  # All-sales-final + rescheduling terms version
+
+PREREQUISITES = {
+    "bls": "None. Designed for healthcare providers and students in clinical programs.",
+    "bls-skills": "You must have already completed BLS online coursework (with us or another program) and bring your completion record and a photo ID.",
+    "heartsaver-cpr-aed": "None.",
+    "pediatric": "None. Designed for childcare providers, teachers, coaches, and parents.",
+    "first-aid": "None.",
+    "aed": "None.",
+    "babysitter": "Designed for ages 11 and up who care for children.",
+    "shaken-baby": "None. Designed for childcare professionals, foster/kinship caregivers, and parents.",
+    "osha": "None. Your employer remains responsible for site-specific training under OSHA's standard; OSHA does not certify students.",
+    "instructor": "Current provider-level CPR certification and instructor pathway approval required. Registration is not yet open.",
+}
+
+CREDENTIAL_OFFERED = {
+    "online_only": "A Don't Be Ordinary CPR, AED & First Aid Training, LLC online course-completion certificate with a unique verification code. This is not an AHA eCard.",
+    "blended": "A Don't Be Ordinary CPR, AED & First Aid Training, LLC course-completion certificate, issued after your instructor verifies your hands-on skills in person. This is not an AHA eCard.",
+    "skills_only": "A Don't Be Ordinary CPR, AED & First Aid Training, LLC course-completion certificate, issued after your instructor verifies your skills at your appointment. This is not an AHA eCard.",
 }
 
 COURSE_BY_ID = {c["id"]: c for c in COURSES}
@@ -267,6 +300,8 @@ STATUS_LABELS = {
     "SKILLS_BOOKED": "Skills session booked",
     "SKILLS_PASSED": "Skills verified by instructor",
     "COMPLETE": "Course complete",
+    "PENDING_PAYMENT": "Payment pending — complete checkout to activate your course",
+    "REFUNDED": "Refunded — access suspended (contact us with questions)",
 }
 
 def current_student(store):
@@ -291,21 +326,71 @@ def course_detail(cid):
     course = find_course(cid)
     if not course:
         return "Course not found", 404
+    if not course.get("enrollment_open", True):
+        flash("Registration for the CPR Instructor Course is not open yet — it is in final preparation. Call (502) 835-8535 to be notified.")
     return render_template("course.html", course=course,
                            how=HOW_IT_WORKS.get(cid, ""),
-                           workflow=course_workflow(course))
+                           workflow=course_workflow(course),
+                           prereq=PREREQUISITES.get(cid, ""),
+                           credential=CREDENTIAL_OFFERED[course_workflow(course)],
+                           policy_version=POLICY_VERSION)
 
 @app.route("/enroll/<cid>", methods=["POST"])
 def enroll(cid):
     course = find_course(cid)
     if not course:
         return "Course not found", 404
+    if not course.get("enrollment_open", True):
+        flash("Registration for this course is not open yet.")
+        return redirect(url_for("course_detail", cid=cid))
     name = (request.form.get("name") or "").strip()
     email = (request.form.get("email") or "").strip().lower()
     if not name or "@" not in email:
         flash("Please enter your name and a valid email to enroll.")
         return redirect(url_for("course_detail", cid=cid))
+    if request.form.get("ack") != "yes":
+        flash("Please read the course disclosures and check the acknowledgment box to enroll — so the format, the document you will receive, and the sales and rescheduling terms are on record for us both.")
+        return redirect(url_for("course_detail", cid=cid))
     store = load_store()
+    if PAYMENTS_MODE in ("test", "live"):
+        # Pending enrollment first; access activates ONLY when Stripe's
+        # signature-verified webhook confirms payment (see stripe_webhook).
+        student = next((s for s in store["students"] if s["email"] == email), None)
+        if not student:
+            student = {"id": new_id("STU"), "name": name, "email": email, "created_at": now_iso()}
+            store["students"].append(student)
+        pending = {
+            "id": new_id("ENR"), "student_id": student["id"], "course_id": cid,
+            "status": "PENDING_PAYMENT", "modules_done": [], "quiz_score": None,
+            "cert_code": None, "created_at": now_iso(), "completed_at": None, "skills": None,
+            "policy_version": POLICY_VERSION, "policy_accepted_at": now_iso(),
+            "payment_status": "pending",
+        }
+        store["enrollments"].append(pending)
+        save_store(store)
+        session["student_id"] = student["id"]
+        try:
+            stripe = _stripe()
+            checkout = stripe.checkout.Session.create(
+                mode="payment",
+                line_items=[{"price_data": {
+                    "currency": "usd",
+                    "product_data": {"name": course["name"]},
+                    "unit_amount": int(course["price"]) * 100,
+                }, "quantity": 1}],
+                metadata={"enrollment_id": pending["id"], "course_id": cid},
+                success_url=request.host_url.rstrip("/") + "/billing/success",
+                cancel_url=request.host_url.rstrip("/") + "/billing/cancel",
+            )
+        except Exception:
+            flash("Payment is temporarily unavailable — please call (502) 835-8535 and we will take care of you.")
+            return redirect(url_for("course_detail", cid=cid))
+        store = load_store()
+        p = find_enrollment(store, pending["id"])
+        if p is not None:
+            p["stripe_session_id"] = checkout["id"]
+            save_store(store)
+        return redirect(checkout["url"], code=303)
     student = next((s for s in store["students"] if s["email"] == email), None)
     if not student:
         student = {"id": new_id("STU"), "name": name, "email": email, "created_at": now_iso()}
@@ -318,10 +403,12 @@ def enroll(cid):
             "id": new_id("ENR"), "student_id": student["id"], "course_id": cid,
             "status": "ENROLLED", "modules_done": [], "quiz_score": None,
             "cert_code": None, "created_at": now_iso(), "completed_at": None, "skills": None,
+            "policy_version": POLICY_VERSION, "policy_accepted_at": now_iso(),
+            "payment_status": "not_required",
         })
     save_store(store)
     session["student_id"] = student["id"]
-    flash(f"You're enrolled in {course['name']} — welcome to the Academy, {name.split()[0]}! (Demo checkout: no payment was taken.)")
+    flash(f"You're enrolled in {course['name']} — welcome, {name.split()[0]}! Your enrollment and policy acknowledgment are on record.")
     return redirect(url_for("my_courses"))
 
 @app.route("/resume", methods=["POST"])
@@ -360,6 +447,13 @@ def my_courses():
                          "label": STATUS_LABELS.get(e["status"], e["status"]), "booking": booking})
     return render_template("my.html", student=student, rows=rows)
 
+def payment_blocked(e):
+    """When payments are enabled, only paid (or grandfathered) enrollments
+    may learn, test, or book. In off mode nothing is ever blocked."""
+    if PAYMENTS_MODE == "off":
+        return False
+    return e.get("payment_status") not in ("paid", "not_required")
+
 def own_enrollment_or_404(store, eid):
     student = current_student(store)
     e = find_enrollment(store, eid)
@@ -375,6 +469,9 @@ def learn(eid):
         flash("Please enroll or sign back in to continue your course.")
         return redirect(url_for("home"))
     course = find_course(e["course_id"])
+    if payment_blocked(e):
+        flash("This enrollment is waiting on payment confirmation. Once Stripe confirms your payment, your course activates automatically.")
+        return redirect(url_for("my_courses"))
     if is_skills_only(course):
         flash("This is a skills-only course — there are no online modules. Book your skills session to complete it.")
         return redirect(url_for("book", eid=eid))
@@ -417,6 +514,9 @@ def quiz(eid):
     if not e:
         return redirect(url_for("home"))
     course = find_course(e["course_id"])
+    if payment_blocked(e):
+        flash("This enrollment is waiting on payment confirmation.")
+        return redirect(url_for("my_courses"))
     questions = course_questions(course)
     total_modules = len(course_modules(course))
     done_count = len({i for i in e["modules_done"] if 0 <= i < total_modules})
@@ -478,9 +578,65 @@ def certificate(code):
 
     return render_template("certificate.html", found=True, e=e, student=student,
                            course=course, code=code,
+                           show_aha_lines=course_workflow(course) != "online_only",
                            needs_skills=requires_skills(course),
                            completed_date=fmt_date(e.get("completed_at")),
                            skills_date=fmt_date(e["skills"]["at"]) if e.get("skills") else "")
+
+@app.route("/billing/success")
+def billing_success():
+    return render_template("billing.html", state="success")
+
+@app.route("/billing/cancel")
+def billing_cancel():
+    return render_template("billing.html", state="cancel")
+
+@app.route("/webhooks/stripe", methods=["POST"])
+def stripe_webhook():
+    """Signature-verified Stripe webhook. This is the ONLY path that can
+    activate a paid enrollment. Idempotent: processed event ids are stored
+    and replays are acknowledged without re-applying."""
+    if PAYMENTS_MODE not in ("test", "live") or not STRIPE_WEBHOOK_SECRET:
+        return "payments disabled", 404
+    try:
+        stripe = _stripe()
+        event = stripe.Webhook.construct_event(
+            request.get_data(), request.headers.get("Stripe-Signature", ""),
+            STRIPE_WEBHOOK_SECRET)
+    except Exception:
+        return "invalid signature", 400
+    store = load_store()
+    seen = store.setdefault("stripe_events", [])
+    if event["id"] in seen:
+        return "already processed", 200
+    etype = event["type"]
+    obj = event["data"]["object"]
+    if etype == "checkout.session.completed":
+        eid = (obj.get("metadata") or {}).get("enrollment_id")
+        e = find_enrollment(store, eid) if eid else None
+        course = find_course(e["course_id"]) if e else None
+        if (e and course and obj.get("payment_status") == "paid"
+                and obj.get("currency") == "usd"
+                and obj.get("amount_total") == int(course["price"]) * 100):
+            e["status"] = "ENROLLED"
+            e["payment_status"] = "paid"
+            e["stripe_session_id"] = obj.get("id")
+            e["stripe_payment_intent"] = obj.get("payment_intent")
+            e["paid_at"] = now_iso()
+            e["amount_paid"] = obj.get("amount_total")
+    elif etype in ("charge.refunded", "charge.dispute.created"):
+        pi = obj.get("payment_intent")
+        for e in store["enrollments"]:
+            if e.get("stripe_payment_intent") == pi and pi:
+                e["payment_status"] = "refunded" if etype == "charge.refunded" else "disputed"
+                e["status"] = "REFUNDED" if etype == "charge.refunded" else e["status"]
+    seen.append(event["id"])
+    save_store(store)
+    return "ok", 200
+
+@app.route("/policy")
+def policy():
+    return render_template("policy.html", policy_version=POLICY_VERSION)
 
 @app.route("/verify", methods=["GET", "POST"])
 def verify():
@@ -496,6 +652,9 @@ def book(eid):
     if not e:
         return redirect(url_for("home"))
     course = find_course(e["course_id"])
+    if payment_blocked(e):
+        flash("This enrollment is waiting on payment confirmation.")
+        return redirect(url_for("my_courses"))
     bookable = e["status"] in ("ONLINE_COMPLETE", "SKILLS_BOOKED") or (
         is_skills_only(course) and e["status"] in ("ENROLLED", "LEARNING"))
     if not bookable:
@@ -510,12 +669,36 @@ def book(eid):
     if request.method == "POST":
         date = request.form.get("date")
         block = request.form.get("block")
-        store["bookings"] = [b for b in store["bookings"] if b["enrollment_id"] != eid]
+        existing = next((b for b in store["bookings"] if b["enrollment_id"] == eid), None)
+        reschedules_used = 0
+        if existing:
+            # One complimentary reschedule per reservation, with at least
+            # 24 hours' notice before the scheduled appointment.
+            starts = {"Morning (9:00–11:00 AM)": 9, "Afternoon (1:00–3:00 PM)": 13,
+                      "Evening (5:00–7:00 PM)": 17}
+            try:
+                appt = datetime.fromisoformat(existing["date"]).replace(
+                    hour=starts.get(existing["block"], 9), tzinfo=LOCAL_TZ)
+            except (TypeError, ValueError):
+                appt = None
+            reschedules_used = existing.get("reschedules_used", 0)
+            if reschedules_used >= 1:
+                flash("Your one complimentary reschedule for this reservation has already been used. A new appointment requires a new booking and payment — call (502) 835-8535 and we will help you.")
+                return redirect(url_for("my_courses"))
+            if appt is not None and (appt - datetime.now(LOCAL_TZ)) < timedelta(hours=24):
+                flash("Complimentary rescheduling needs at least 24 hours' notice before your appointment — your session is inside that window, so the reserved session stands. No-shows forfeit the session; call (502) 835-8535 with any emergency.")
+                return redirect(url_for("my_courses"))
+            reschedules_used += 1
+            store["bookings"] = [b for b in store["bookings"] if b["enrollment_id"] != eid]
         store["bookings"].append({"id": new_id("BOK"), "enrollment_id": eid,
-                                  "date": date, "block": block, "created_at": now_iso()})
+                                  "date": date, "block": block, "created_at": now_iso(),
+                                  "reschedules_used": reschedules_used})
         e["status"] = "SKILLS_BOOKED"
         save_store(store)
-        flash(f"Skills session booked for {date} — {block}. Bring a photo ID. Your certificate is issued here after your instructor verifies your skills.")
+        if existing and reschedules_used:
+            flash(f"Session rescheduled to {date} — {block}. That was your one complimentary reschedule for this reservation. Bring a photo ID.")
+        else:
+            flash(f"Skills session booked for {date} — {block}. Bring a photo ID. Your certificate is issued here after your instructor verifies your skills. One complimentary reschedule is included with at least 24 hours' notice.")
         return redirect(url_for("my_courses"))
     return render_template("book.html", e=e, course=course, days=days, blocks=blocks)
 
@@ -573,6 +756,21 @@ def instructor_student(eid):
                            course=find_course(e["course_id"]), booking=booking,
                            enrolled_date=enrolled_date,
                            label=STATUS_LABELS.get(e["status"], e["status"]))
+
+@app.route("/instructor/booking-cancel/<eid>", methods=["POST"])
+def booking_cancel(eid):
+    if not session.get("instructor"):
+        return redirect(url_for("instructor_login"))
+    store = load_store()
+    e = find_enrollment(store, eid)
+    if e:
+        # Business-initiated cancellation: the student keeps a complimentary
+        # replacement — clear the booking and the reschedule counter.
+        store["bookings"] = [b for b in store["bookings"] if b["enrollment_id"] != eid]
+        if e["status"] == "SKILLS_BOOKED":
+            e["status"] = "ONLINE_COMPLETE" if e.get("quiz_score") is not None else "ENROLLED"
+        save_store(store)
+    return redirect(url_for("instructor"))
 
 @app.route("/instructor/skills-pass/<eid>", methods=["POST"])
 def skills_pass(eid):

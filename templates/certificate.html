@@ -59,7 +59,7 @@
         <img class="mark" src="{{ url_for('static', filename='img/heart.png') }}" alt="Don't Be Ordinary CPR heart logo">
         <div class="btext">
             <div class="brand-line">DON'T BE ORDINARY <span class="cpr">CPR</span></div>
-            <div class="brand-sub">CPR, AED &amp; FIRST AID TRAINING ACADEMY</div>
+            <div class="brand-sub">CPR, AED &amp; FIRST AID TRAINING, LLC</div>
             <div class="brand-tag"><span class="rule"></span>TRAINING • EMPOWERING • SAVING LIVES<span class="rule"></span></div>
         </div>
     </div>
@@ -76,12 +76,13 @@
             Verification code: <span class="vcode">{{ code }}</span>
         </div>
         <div class="gold-rule"><span class="line"></span><span class="diamond"></span><span class="line"></span></div>
-        <div class="aha">Instruction provided by an American Heart Association–certified instructor.<br>
-        <span class="small">Course curriculum follows current American Heart Association guidelines<br>for CPR and emergency cardiovascular care.</span></div>
+        {% if show_aha_lines %}<div class="aha">Instruction provided by an American Heart Association–certified instructor.<br>
+        <span class="small">Course curriculum follows current American Heart Association guidelines<br>for CPR and emergency cardiovascular care.</span></div>{% else %}<div class="aha">A Don't Be Ordinary CPR, AED &amp; First Aid Training, LLC online course.<br>
+        <span class="small">This certificate documents completion of the online coursework and assessment for this course.</span></div>{% endif %}
         <div class="cert-foot">
             <div class="sigbox">
-                <div class="sig-name">Derrick D. Dennis</div>
-                <div class="sig-line"><strong>Derrick D. Dennis</strong>, Instructor<br><span class="sub">American Heart Association Certified Instructor</span></div>
+                <div class="sig-name">Derrick D. Dennis Sr.</div>
+                <div class="sig-line"><strong>Derrick D. Dennis Sr.</strong>, Instructor<br><span class="sub">{% if show_aha_lines %}American Heart Association Certified Instructor{% else %}Don't Be Ordinary CPR, AED &amp; First Aid Training, LLC{% endif %}</span></div>
             </div>
             <div class="foot-right">
                 <div class="biz">Don't Be Ordinary CPR, AED &amp;<br>First Aid Training, LLC<br>Louisville, Kentucky</div>

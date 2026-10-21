@@ -36,6 +36,11 @@
             <button class="btn gold" type="submit">Mark Skills Passed</button>
         </form>
         {% endif %}
+        {% if booking %}
+        <form method="POST" action="{{ url_for('booking_cancel', eid=e.id) }}" onsubmit="return confirm('Business cancellation: clear this booking? The student keeps a complimentary replacement session.');">
+            <button class="btn ghost" type="submit">Cancel Booking (Business)</button>
+        </form>
+        {% endif %}
         {% if e.cert_code %}
         <a class="btn dark" href="{{ url_for('certificate', code=e.cert_code) }}" target="_blank">Open Certificate</a>
         {% endif %}
