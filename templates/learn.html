@@ -8,7 +8,7 @@
 {% block content %}
 <p><a href="{{ url_for('my_courses') }}">&larr; My Courses</a></p>
 <h1 style="margin-top:0;">{{ course.name }}</h1>
-<p style="color:#5a6a7d;">Work through all three modules, then take the assessment. Passing (80%+) earns your online completion certificate and unlocks skills-session booking.</p>
+<p style="color:#5a6a7d;">Work through all {{ total }} modules <strong>in order</strong>, then take the assessment. Passing (80%+) earns your online completion certificate and unlocks skills-session booking. There are no shortcuts — each step unlocks the next.</p>
 
 {% for m in modules %}
 <div class="module">
@@ -16,14 +16,18 @@
     <p>{{ m[1] }}</p>
     <p>{{ m[2] }}</p>
     {% if (loop.index0) not in e.modules_done %}
+        {% if loop.index0 == next_idx %}
     <form method="POST" action="{{ url_for('module_done', eid=e.id, idx=loop.index0) }}">
         <button class="btn ghost" type="submit">Mark Module Complete</button>
     </form>
+        {% else %}
+    <p style="color:#98a2ad; font-size:13px; margin-bottom:0;">Locked — complete the module above first.</p>
+        {% endif %}
     {% endif %}
 </div>
 {% endfor %}
 
-{% if e.modules_done|length >= 3 %}
+{% if e.modules_done|length >= total %}
 <div class="card" style="text-align:center;">
     <h3 style="margin-top:0;">All modules complete</h3>
     <p style="color:#5a6a7d;">You're ready for the assessment.</p>

@@ -290,7 +290,13 @@ def learn(eid):
         return redirect(url_for("home"))
     course = find_course(e["course_id"])
     modules = MODULE_SETS[course["bank"]]
-    return render_template("learn.html", e=e, course=course, modules=modules)
+    total = len(modules)
+    done_set = {i for i in e["modules_done"] if 0 <= i < total}
+    nxt = 0
+    while nxt in done_set:
+        nxt += 1
+    return render_template("learn.html", e=e, course=course, modules=modules,
+                           next_idx=nxt, total=total)
 
 @app.route("/module/<eid>/<int:idx>", methods=["POST"])
 def module_done(eid, idx):
@@ -298,13 +304,21 @@ def module_done(eid, idx):
     e = own_enrollment_or_404(store, eid)
     if not e:
         return redirect(url_for("home"))
-    if idx not in e["modules_done"]:
-        e["modules_done"].append(idx)
-    if len(e["modules_done"]) >= 3 and e["status"] in ("ENROLLED", "LEARNING"):
+    course = find_course(e["course_id"])
+    total = len(MODULE_SETS[course["bank"]])
+    done_set = {i for i in e["modules_done"] if 0 <= i < total}
+    nxt = 0
+    while nxt in done_set:
+        nxt += 1
+    if idx in done_set:
+        pass  # already complete — no-op
+    elif e["status"] in ("ENROLLED", "LEARNING") and idx == nxt:
+        done_set.add(idx)
+        e["modules_done"] = sorted(done_set)
         e["status"] = "LEARNING"
-    if e["status"] == "ENROLLED":
-        e["status"] = "LEARNING"
-    save_store(store)
+        save_store(store)
+    else:
+        flash("Modules must be completed in order — finish the current module first.")
     return redirect(url_for("learn", eid=eid))
 
 @app.route("/quiz/<eid>", methods=["GET", "POST"])
@@ -315,8 +329,13 @@ def quiz(eid):
         return redirect(url_for("home"))
     course = find_course(e["course_id"])
     questions = QUIZ_BANKS[course["bank"]]
-    if len(e["modules_done"]) < 3:
-        flash("Finish all three modules before the assessment.")
+    total_modules = len(MODULE_SETS[course["bank"]])
+    done_count = len({i for i in e["modules_done"] if 0 <= i < total_modules})
+    if e["status"] in ("ONLINE_COMPLETE", "SKILLS_BOOKED", "SKILLS_PASSED"):
+        flash("You have already passed this assessment — your result is locked in.")
+        return redirect(url_for("my_courses"))
+    if done_count < total_modules:
+        flash("Finish all the modules — in order — before the assessment.")
         return redirect(url_for("learn", eid=eid))
     if request.method == "POST":
         correct = 0
@@ -325,9 +344,9 @@ def quiz(eid):
                 correct += 1
         score = round(correct / len(questions) * 100)
         e["quiz_score"] = score
-        if correct >= 4:
+        if score >= 80:
             if not e["cert_code"]:
-                e["cert_code"] = "DBO-2026-" + secrets.token_hex(2).upper()
+                e["cert_code"] = "DBO-2026-" + secrets.token_hex(3).upper()
             e["status"] = "ONLINE_COMPLETE"
             e["completed_at"] = now_iso()
             save_store(store)
