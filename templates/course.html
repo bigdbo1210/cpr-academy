@@ -19,7 +19,11 @@
         </ul>
     </div>
 
+    {% if official_aha %}
+    <p style="font-size:12.5px; color:#77828f; line-height:1.6; max-width:680px;">This is an official American Heart Association course, taught by an American Heart Association–certified instructor through an authorized Training Site arrangement. Your official AHA eCard is issued through the American Heart Association once you complete the course requirements — the official AHA online coursework where this course includes it, and the in-person skills evaluation. That eCard is the credential this course earns.</p>
+    {% else %}
     <p style="font-size:12.5px; color:#77828f; line-height:1.6; max-width:680px;">This course is independently developed and taught by an American Heart Association–certified instructor, following current AHA guidelines. It is not an AHA-approved course, and the online assessment here is our own knowledge check — it is not an official AHA examination, and completing this course does not by itself earn an AHA eCard. Official AHA eCards are issued only through the American Heart Association after an authorized AHA course and in-person skills evaluation.</p>
+    {% endif %}
     <div style="font-size:26px; font-weight:800; margin:14px 0 4px;">${{ course.price }} <span style="font-size:13px; font-weight:normal; color:#5a6a7d;">per person</span></div>
 
     {% if course.get('enrollment_open', True) %}
@@ -28,8 +32,8 @@
         <input type="text" name="name" placeholder="Jordan Smith" required>
         <label>Email</label>
         <input type="email" name="email" placeholder="you@example.com" required>
-        <label style="display:flex; gap:8px; align-items:flex-start; font-size:13px; line-height:1.5; margin-top:12px;">
-            <input type="checkbox" name="ack" value="yes" required style="width:auto; margin-top:3px;">
+        <label class="ack-label">
+            <input type="checkbox" name="ack" value="yes" required>
             <span>I have read the disclosures above — the course format, prerequisites, the document I will receive, the <strong>All Sales Are Final</strong> policy, and the rescheduling terms{% if workflow != 'online_only' %}{% endif %} — and I agree to them. <span style="color:#77828f;">(Policy version {{ policy_version }}; your acknowledgment is recorded with your enrollment.)</span></span>
         </label>
         <p style="font-size:12px; color:#77828f;">Secure checkout opens with our production launch — enrolling today reserves your seat and takes no payment.</p>

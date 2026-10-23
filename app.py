@@ -138,6 +138,16 @@ OFFICIAL_COURSES = {"bls", "bls-skills", "bls-instructor-led"}  # AHA eCard path
 def is_official(course):
     return course["id"] in OFFICIAL_COURSES
 
+# Courses whose pages carry the official-AHA language (Derrick's ruling,
+# 2026-10-23): AHA's own course titles delivered through the Training Site
+# arrangement — the BLS eCard pathway above plus the Heartsaver line. The
+# remaining courses are developed by Don't Be Ordinary CPR and carry the
+# independent-course wording.
+OFFICIAL_LANGUAGE_IDS = OFFICIAL_COURSES | {"heartsaver-cpr-aed", "pediatric", "first-aid"}
+
+def is_official_language(course):
+    return course["id"] in OFFICIAL_LANGUAGE_IDS
+
 MODULE_SETS = {
     "cpr": [
         ("Foundations: Recognize the Emergency",
@@ -386,6 +396,7 @@ def course_detail(cid):
     if not course.get("enrollment_open", True):
         flash("Registration for the CPR Instructor Course is not open yet — it is in final preparation. Call (502) 835-8535 to be notified.")
     return render_template("course.html", course=course,
+                           official_aha=is_official_language(course),
                            how=HOW_IT_WORKS.get(cid, ""),
                            workflow=course_workflow(course),
                            prereq=PREREQUISITES.get(cid, ""),
@@ -583,7 +594,7 @@ def quiz(eid):
         flash("This enrollment is waiting on payment confirmation.")
         return redirect(url_for("my_courses"))
     if course_workflow(course) == "aha_blended":
-        flash("Your assessment is inside the official AHA HeartCode BLS online course — there is no separate Academy quiz for this course.")
+        flash("Your assessment is inside the official AHA HeartCode BLS online course — there is no separate quiz for this course on this site.")
         return redirect(url_for("my_courses"))
     questions = course_questions(course)
     total_modules = len(course_modules(course))

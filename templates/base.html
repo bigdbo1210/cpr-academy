@@ -27,6 +27,8 @@
         .btn.ghost { background: white; color: #14181d; border: 1px solid #c9cfd8; }
         input[type="text"], input[type="email"], input[type="password"], select { padding: 9px 10px; border: 1px solid #c9cfd8; border-radius: 6px; font-size: 14px; width: 100%; }
         label { font-size: 12.5px; font-weight: bold; color: #3c4a5c; display: block; margin: 10px 0 4px; }
+        .ack-label { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; font-weight: normal; line-height: 1.5; margin: 14px 0 4px; cursor: pointer; }
+        .ack-label input[type="checkbox"] { flex: none; width: 22px; height: 22px; margin: 1px 0 0; padding: 0; accent-color: #c22430; -webkit-appearance: auto; appearance: auto; }
         .card { background: white; border: 1px solid #e4ddcf; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(20,24,29,0.06); }
         .footer { background: #14181d; color: #9aa7b5; text-align: center; padding: 20px 16px 24px; font-size: 12.5px; line-height: 1.65; }
         .footer strong { color: white; }
@@ -64,7 +66,7 @@
 
     <div class="footer">
         Created by <strong>Derrick D. Dennis</strong> · Don't Be Ordinary CPR, AED &amp; First Aid Training, LLC · Louisville, Kentucky · (502) 835-8535
-        <div class="fine">Completing coursework here earns an <strong>online course completion certificate</strong> issued by Don't Be Ordinary CPR, AED &amp; First Aid Training, LLC — it is not an AHA eCard. Our courses are independently developed, taught by an American Heart Association–certified instructor, and follow current AHA guidelines; they are not AHA-approved courses. An official AHA eCard is issued only through the American Heart Association, after completing an authorized AHA course and its in-person skills evaluation. <a href="{{ url_for('policy') }}" style="color:#c8cfd8; text-decoration:underline;">Sales &amp; Rescheduling Policy</a> · 240 Whittington Parkway, Louisville, KY 40222 · (502) 835-8535 &copy; 2026 Derrick D. Dennis Sr. · All Rights Reserved.</div>
+        <div class="fine">The official American Heart Association courses offered here (the BLS and Heartsaver courses) lead to the <strong>official AHA eCard</strong>, issued through the American Heart Association after the authorized course and its in-person skills evaluation. Our other courses are developed and taught by Don't Be Ordinary CPR, AED &amp; First Aid Training, LLC — taught by an American Heart Association–certified instructor and following current AHA guidelines — and completing them earns an <strong>online course completion certificate</strong> issued by Don't Be Ordinary CPR, AED &amp; First Aid Training, LLC, which is not an AHA eCard. <a href="{{ url_for('policy') }}" style="color:#c8cfd8; text-decoration:underline;">Sales &amp; Rescheduling Policy</a> · 240 Whittington Parkway, Louisville, KY 40222 · (502) 835-8535 &copy; 2026 Derrick D. Dennis Sr. · All Rights Reserved.</div>
     </div>
 </body>
 </html>
