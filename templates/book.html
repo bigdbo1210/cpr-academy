@@ -4,20 +4,39 @@
 <div class="card" style="max-width:560px;">
     <h2 style="margin-top:0;">Book Your Hands-On Skills Session</h2>
     <p style="color:#5a6a7d; line-height:1.6;"><strong>{{ course.name }}</strong> — 240 Whittington Parkway, Louisville, KY 40222. Sessions run 20–30 minutes. Bring a photo ID and your completion certificate code: <strong>{{ e.cert_code }}</strong>.</p>
+    <p style="color:#5a6a7d; line-height:1.6;">Sessions are offered Monday–Thursday evenings, Friday mornings and evenings, and Saturdays 9 AM–3 PM. On JCPS school holidays, daytime sessions open up too. <strong>Sundays are by appointment only</strong> — call (502) 835-8535.</p>
     <form method="POST">
         <label>Choose a day</label>
-        <select name="date" required>
+        <select name="date" id="book-date" required>
             {% for d in days %}
             <option value="{{ d.value }}">{{ d.label }}</option>
             {% endfor %}
         </select>
         <label>Choose a block</label>
-        <select name="block" required>
+        <select name="block" id="book-block" required>
             {% for b in blocks %}
             <option value="{{ b }}">{{ b }}</option>
             {% endfor %}
         </select>
         <button class="btn" type="submit" style="margin-top:16px;">Book My Session</button>
     </form>
+    <script>
+    (function () {
+        var BLOCKS = {{ blocks_by_date|tojson }};
+        var dateSel = document.getElementById('book-date');
+        var blockSel = document.getElementById('book-block');
+        function sync() {
+            var opts = BLOCKS[dateSel.value] || [];
+            blockSel.innerHTML = '';
+            opts.forEach(function (b) {
+                var o = document.createElement('option');
+                o.value = b; o.textContent = b;
+                blockSel.appendChild(o);
+            });
+        }
+        dateSel.addEventListener('change', sync);
+        sync();
+    })();
+    </script>
 </div>
 {% endblock %}

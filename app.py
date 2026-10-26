@@ -21,6 +21,58 @@ from zoneinfo import ZoneInfo
 
 LOCAL_TZ = ZoneInfo("America/New_York")  # Derrick's business runs on Louisville time
 
+# --- Instructor availability for session booking -------------------------
+# Set by Derrick 2026-10-25/26. He teaches 7th grade Mon–Thu (JCPS), so on
+# school days only the evening block is offered; Fridays add the morning;
+# Saturdays are a full class day (9–3); Sundays are by appointment only
+# (phone) and never appear in the picker. On JCPS school-out days his
+# daytime opens up, so all three blocks are offered. School-out dates are
+# the verified JCPS 2026–27 calendar (see jcps-2026-27-school-out-days.md).
+BLOCK_MORNING = "Morning (9:00–11:00 AM)"
+BLOCK_AFTERNOON = "Afternoon (1:00–3:00 PM)"
+BLOCK_EVENING = "Evening (5:00–7:00 PM)"
+ALL_BLOCKS = [BLOCK_MORNING, BLOCK_AFTERNOON, BLOCK_EVENING]
+
+
+def _expand_range(a, b):
+    d = datetime.fromisoformat(a).date()
+    end = datetime.fromisoformat(b).date()
+    while d <= end:
+        yield d.isoformat()
+        d += timedelta(days=1)
+
+
+SCHOOL_OUT_DAYS = set()
+for _a, _b in [
+    ("2026-08-04", "2026-08-04"),  # Non-Flex In-Service
+    ("2026-09-07", "2026-09-07"),  # Labor Day
+    ("2026-09-23", "2026-09-23"),  # Family-Teacher Conferences
+    ("2026-09-28", "2026-10-02"),  # Fall Break
+    ("2026-11-02", "2026-11-03"),  # Gold Day + Election Day
+    ("2026-11-25", "2026-11-27"),  # Thanksgiving Break
+    ("2026-12-21", "2027-01-01"),  # Winter/Christmas Break
+    ("2027-01-18", "2027-01-18"),  # MLK Jr. Day
+    ("2027-02-15", "2027-02-16"),  # Gold Day + Conferences
+    ("2027-03-26", "2027-03-26"),  # PD Flex Day
+    ("2027-03-29", "2027-04-02"),  # Spring Break
+    ("2027-04-30", "2027-04-30"),  # Oaks Day
+    ("2027-05-18", "2027-05-18"),  # Primary Election Day
+]:
+    SCHOOL_OUT_DAYS.update(_expand_range(_a, _b))
+
+
+def blocks_for_date(d):
+    """Time blocks offered on a given date (a datetime.date)."""
+    if d.weekday() == 6:  # Sunday — by appointment only, call ahead
+        return []
+    if d.weekday() == 5:  # Saturday — classes 9 AM to 3 PM
+        return [BLOCK_MORNING, BLOCK_AFTERNOON]
+    if d.isoformat() in SCHOOL_OUT_DAYS:  # school is out — daytime opens
+        return list(ALL_BLOCKS)
+    if d.weekday() == 4:  # Friday — 8–11 AM and 4–9 PM
+        return [BLOCK_MORNING, BLOCK_EVENING]
+    return [BLOCK_EVENING]  # Mon–Thu school days — 4–9 PM window
+
 app = Flask(__name__)
 app.secret_key = os.environ.get("ACADEMY_SECRET_KEY", "academy-dev-secret-key")
 
@@ -777,13 +829,26 @@ def book(eid):
         return redirect(url_for("my_courses"))
     days = []
     base = datetime.now(timezone.utc).date()
-    for i in range(1, 15):
+    for i in range(1, 22):
         d = base + timedelta(days=i)
+        if d.weekday() == 6:
+            continue  # Sundays are by appointment only — never in the picker
         days.append({"value": d.isoformat(), "label": d.strftime("%A, %B %d")})
-    blocks = ["Morning (9:00–11:00 AM)", "Afternoon (1:00–3:00 PM)", "Evening (5:00–7:00 PM)"]
+        if len(days) >= 14:
+            break
+    blocks_by_date = {day["value"]: blocks_for_date(datetime.fromisoformat(day["value"]).date())
+                      for day in days}
+    blocks = blocks_by_date[days[0]["value"]] if days else []
     if request.method == "POST":
         date = request.form.get("date")
         block = request.form.get("block")
+        try:
+            chosen = datetime.fromisoformat(date).date()
+        except (TypeError, ValueError):
+            chosen = None
+        if chosen is None or block not in blocks_for_date(chosen):
+            flash("That time block isn't offered on the day you picked — please choose from the blocks shown for that day. Sundays are by appointment only: call (502) 835-8535.")
+            return redirect(url_for("book", eid=eid))
         existing = next((b for b in store["bookings"] if b["enrollment_id"] == eid), None)
         reschedules_used = 0
         if existing:
@@ -815,7 +880,8 @@ def book(eid):
         else:
             flash(f"Skills session booked for {date} — {block}. Bring a photo ID. Your certificate is issued here after your instructor verifies your skills. One complimentary reschedule is included with at least 24 hours' notice.")
         return redirect(url_for("my_courses"))
-    return render_template("book.html", e=e, course=course, days=days, blocks=blocks)
+    return render_template("book.html", e=e, course=course, days=days, blocks=blocks,
+                           blocks_by_date=blocks_by_date)
 
 # -----------------------------
 # Instructor
