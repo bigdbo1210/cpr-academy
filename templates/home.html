@@ -15,6 +15,7 @@
 .step p { margin: 0; font-size: 13px; color: #5a6a7d; line-height: 1.5; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
 .course { background: white; border: 1px solid #e4ddcf; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(20,24,29,0.05); }
+.course img.course-img { width: 100%; height: auto; display: block; border-radius: 8px; margin-bottom: 12px; }
 .course h3 { margin: 0 0 4px; font-size: 16.5px; }
 .course .tag { font-size: 11px; font-weight: bold; letter-spacing: 0.6px; text-transform: uppercase; color: #9d1b25; }
 .course p { font-size: 13.5px; color: #5a6a7d; line-height: 1.55; flex: 1; }
@@ -54,6 +55,7 @@
 <div class="grid">
     {% for c in courses %}
     <div class="course">
+        <img class="course-img" src="{{ url_for('static', filename='img/tiles/tile-' + c.id + '.jpg') }}" alt="{{ c.name }}">
         <div class="tag">{{ c.tag }}</div>
         <h3>{{ c.name }}</h3>
         <p>{{ c.blurb }}</p>

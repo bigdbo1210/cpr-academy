@@ -2,6 +2,7 @@
 {% block content %}
 <p><a href="{{ url_for('home') }}">&larr; All courses</a></p>
 <div class="card">
+    <img src="{{ url_for('static', filename='img/tiles/tile-' + course.id + '.jpg') }}" alt="{{ course.name }}" style="float:right; width:300px; max-width:42%; height:auto; border-radius:10px; margin:2px 0 12px 18px;">
     <div style="font-size:11px; font-weight:bold; letter-spacing:0.6px; text-transform:uppercase; color:#9d1b25;">{{ course.tag }}</div>
     <h1 style="margin:6px 0 8px; font-size:26px;">{{ course.name }}</h1>
     <p style="color:#5a6a7d; line-height:1.6; max-width:680px;">{{ course.blurb }}</p>
