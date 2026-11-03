@@ -97,7 +97,7 @@ INSTRUCTOR_PASSWORD = os.environ.get("ACADEMY_INSTRUCTOR_PASSWORD", "academy123"
 
 COURSES = [
     {"id": "bls", "name": "BLS for Healthcare Providers", "price": 150, "bank": "cpr", "workflow": "aha_blended",
-     "tag": "Official AHA blended — HeartCode online + in-person skills session",
+     "tag": "AHA blended — HeartCode online + in-person skills session",
      "blurb": "The complete official package: your HeartCode BLS online course license, an in-person skills training and evaluation session with Derrick, and your official AHA BLS Provider eCard on successful completion — all included in the $150 price, no extra charge for the skills session or eCard."},
     {"id": "bls-skills", "name": "BLS Skills Check-Off", "price": 80, "bank": "cpr", "workflow": "skills_only",
      "tag": "Skills session only",
