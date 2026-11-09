@@ -3,6 +3,14 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Don't Be Ordinary CPR, AED &amp; First Aid Training, LLC{% endblock %}</title>
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta name="theme-color" content="#14181d">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="DBO CPR">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='icons/icon-192.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;700;800&display=swap" rel="stylesheet">
@@ -66,7 +74,15 @@
 
     <div class="footer">
         Created by <strong>Derrick D. Dennis Sr.</strong> · Don't Be Ordinary CPR, AED &amp; First Aid Training, LLC · Louisville, Kentucky · (502) 835-8535
+        <div style="margin-top:6px;">📱 On your phone? Add this site to your Home Screen to keep your classes one tap away.</div>
         <div class="fine"><a href="{{ url_for('policy') }}" style="color:#c8cfd8; text-decoration:underline;">Sales &amp; Rescheduling Policy</a> · <a href="{{ url_for('policy') }}#aha-disclosure" style="color:#c8cfd8; text-decoration:underline;">AHA Course Disclosure</a> · 240 Whittington Pkwy, Louisville, KY 40222 · (502) 835-8535 · dontbeordinarycpr@yahoo.com &copy; 2026 Derrick D. Dennis Sr. · All Rights Reserved.</div>
     </div>
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker.register("/sw.js").catch(function () {});
+        });
+      }
+    </script>
 </body>
 </html>

@@ -12,7 +12,7 @@ normal business process — this demo never fabricates a credential.
 Run:  flask --app app run   (or: python app.py)
 Instructor login: username ddennis; password set via ACADEMY_INSTRUCTOR_PASSWORD.
 """
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory
 import json
 import os
 import secrets
@@ -796,6 +796,21 @@ def stripe_webhook():
     seen.append(event["id"])
     save_store(store)
     return "ok", 200
+
+@app.route("/manifest.webmanifest")
+def pwa_manifest():
+    return send_from_directory("static", "manifest.webmanifest",
+                               mimetype="application/manifest+json")
+
+
+@app.route("/sw.js")
+def pwa_service_worker():
+    resp = send_from_directory("static", "sw.js",
+                               mimetype="application/javascript")
+    resp.headers["Service-Worker-Allowed"] = "/"
+    resp.headers["Cache-Control"] = "no-cache"
+    return resp
+
 
 @app.route("/policy")
 def policy():
