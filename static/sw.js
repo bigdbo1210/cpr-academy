@@ -1,7 +1,7 @@
 /* DBO CPR service worker — installability + fast static assets.
    Pages and student data are always network-first: course content,
    enrollments and account pages must never be served stale. */
-const CACHE = "dbo-cpr-v3";
+const CACHE = "dbo-cpr-v4";
 const STATIC_PATHS = ["/static/icons/", "/static/img/"];
 
 self.addEventListener("install", (event) => {
