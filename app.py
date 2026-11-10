@@ -127,7 +127,7 @@ COURSES = [
     {"id": "osha", "name": "OSHA Bloodborne Pathogens", "price": 80, "bank": "knowledge", "workflow": "online_only",
      "tag": "Online only — no skills session",
      "blurb": "Annual bloodborne pathogens training for workplaces: exposure control, PPE, and what to do after an exposure."},
-    {"id": "instructor", "name": "CPR Instructor Course", "price": 600, "bank": "knowledge", "workflow": "blended", "enrollment_open": False,
+    {"id": "instructor", "name": "CPR Instructor Course", "price": 600, "bank": "knowledge", "workflow": "blended",
      "tag": "Instructor pathway",
      "blurb": "Teach what you know. The pathway to leading CPR and first aid classes of your own."},
 ]
@@ -158,7 +158,7 @@ PREREQUISITES = {
     "babysitter": "Designed for ages 11 and up who care for children.",
     "shaken-baby": "None. Designed for childcare professionals, foster/kinship caregivers, and parents.",
     "osha": "None. Your employer remains responsible for site-specific training under OSHA's standard; OSHA does not certify students.",
-    "instructor": "Current provider-level CPR certification and instructor pathway approval required. Registration is not yet open.",
+    "instructor": "Current provider-level CPR certification and instructor pathway approval required.",
 }
 
 CREDENTIAL_OFFERED = {
