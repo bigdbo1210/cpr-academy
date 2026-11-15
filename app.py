@@ -98,33 +98,39 @@ INSTRUCTOR_PASSWORD = os.environ.get("ACADEMY_INSTRUCTOR_PASSWORD", "academy123"
 COURSES = [
     {"id": "bls", "name": "BLS for Healthcare Providers", "price": 150, "bank": "cpr", "workflow": "aha_blended",
      "tag": "AHA blended — HeartCode online + in-person skills session",
-     "blurb": "The complete official package: your HeartCode BLS online course license, an in-person skills training and evaluation session with Derrick, and your official AHA BLS Provider eCard on successful completion — all included in the $150 price, no extra charge for the skills session or eCard."},
+     "blurb": "The complete official package: your HeartCode BLS online course license, an in-person skills training and evaluation session with an AHA Instructor, and your official AHA BLS Provider eCard on successful completion — all included in the $150 price, no extra charge for the skills session or eCard."},
     {"id": "bls-skills", "name": "BLS Skills Check-Off", "price": 80, "bank": "cpr", "workflow": "skills_only",
      "tag": "Skills session only",
      "blurb": "Already finished your online BLS coursework? Book the hands-on skills check-off and finish the job."},
     {"id": "bls-instructor-led", "name": "BLS Instructor-Led (Full Course, In Person)", "price": 150, "bank": "cpr", "workflow": "instructor_led",
      "tag": "Instructor-led — full course in person, no online portion",
-     "blurb": "Prefer to learn it all in the room? The complete BLS course taught in person by Derrick — instruction, written examination, and skills testing — ending with the official AHA BLS Provider eCard through the authorized pathway."},
-    {"id": "heartsaver-cpr-aed", "name": "Heartsaver CPR AED", "price": 155, "bank": "cpr", "workflow": "blended",
+     "blurb": "Prefer to learn it all in the room? The complete BLS course taught in person by an AHA Instructor — instruction, written examination, and skills testing — ending with the official AHA BLS Provider eCard through the authorized pathway."},
+    {"id": "acls", "name": "HeartCode ACLS Online", "price": 318, "bank": "cpr", "workflow": "aha_online",
+     "tag": "AHA online course only — assigned through Training Central",
+     "blurb": "HeartCode ACLS Online is the online portion of ACLS blended learning that will prepare students for hands-on practice and testing of skills. It uses a personalized adaptive algorithm that sets learners on the most efficient path to ACLS mastery, through self-directed learning content, probes, and cognitive assessment activities. This listing is the online course only — the ACLS Provider eCard requires a separate hands-on skills session with an AHA Instructor."},
+    {"id": "pals", "name": "HeartCode PALS Online", "price": 318, "bank": "cpr", "workflow": "aha_online",
+     "tag": "AHA online course only — assigned through Training Central",
+     "blurb": "HeartCode PALS Online is the online portion of PALS blended learning that will prepare students for hands-on practice and testing of PALS skills. It uses a personalized adaptive algorithm that sets students on the most efficient path to PALS mastery, through self-directed learning content, probes, and cognitive assessment activities. This listing is the online course only — the PALS Provider eCard requires a separate hands-on skills session with an AHA Instructor."},
+    {"id": "heartsaver-cpr-aed", "name": "Heartsaver CPR AED", "price": 160, "bank": "cpr", "workflow": "blended",
      "tag": "Blended: online + skills session",
      "blurb": "Adult, child, and infant CPR with AED — the workplace and community flagship course."},
-    {"id": "pediatric", "name": "Heartsaver Pediatric First Aid CPR AED", "price": 155, "bank": "cpr", "workflow": "blended",
+    {"id": "pediatric", "name": "Heartsaver Pediatric First Aid CPR AED", "price": 160, "bank": "cpr", "workflow": "blended",
      "tag": "Blended: online + skills session",
      "blurb": "For childcare providers and parents: pediatric first aid, CPR, and AED with an emphasis on childhood emergencies."},
-    {"id": "first-aid", "name": "Heartsaver First Aid Training", "price": 95, "bank": "knowledge", "workflow": "blended",
+    {"id": "first-aid", "name": "Heartsaver First Aid Training", "price": 100, "bank": "knowledge", "workflow": "blended",
      "tag": "Blended: online + skills session",
      "blurb": "Recognize and respond to the emergencies you are most likely to meet: bleeding, burns, choking, allergic reactions, and more."},
-    {"id": "aed", "name": "AED Training", "price": 95, "bank": "cpr", "workflow": "blended",
+    {"id": "aed", "name": "AED Training", "price": 100, "bank": "cpr", "workflow": "blended",
      "tag": "Blended: online + skills session",
      "blurb": "Focused AED training: pad placement, safety, special situations, and confident, fast response."},
-    {"id": "babysitter", "name": "Babysitters & Nanny Training", "price": 155, "bank": "knowledge", "workflow": "blended",
+    {"id": "babysitter", "name": "Babysitters & Nanny Training", "price": 160, "bank": "knowledge", "workflow": "blended",
      "tag": "Blended: online + skills session",
      "blurb": "Safety, first aid, and emergency confidence for the people families trust with their children."},
     {"id": "shaken-baby", "name": "Shaken Baby Syndrome / Abusive Head Trauma", "price": 95, "bank": "knowledge",
      "workflow": "online_only",
      "tag": "Online course — no skills session",
      "blurb": "Recognize, prevent, and respond to abusive head trauma — required knowledge for childcare professionals."},
-    {"id": "osha", "name": "OSHA Bloodborne Pathogens", "price": 80, "bank": "knowledge", "workflow": "online_only",
+    {"id": "osha", "name": "OSHA Bloodborne Pathogens", "price": 90, "bank": "knowledge", "workflow": "online_only",
      "tag": "Online only — no skills session",
      "blurb": "Annual bloodborne pathogens training for workplaces: exposure control, PPE, and what to do after an exposure."},
     {"id": "instructor", "name": "CPR Instructor Course", "price": 600, "bank": "knowledge", "workflow": "blended",
@@ -132,8 +138,10 @@ COURSES = [
      "blurb": "Teach what you know. The pathway to leading CPR and first aid classes of your own."},
 ]
 HOW_IT_WORKS = {
-    "bls-instructor-led": "(1) Enroll and pay $150. (2) Book your in-person class session. (3) Attend the full instructor-led BLS course with Derrick — complete instruction, the written examination, and skills testing, following the current authorized course requirements. (4) Your official AHA BLS Provider eCard is issued through the authorized pathway once every requirement is met. No online license is involved in this course.",
+    "bls-instructor-led": "(1) Enroll and pay $150. (2) Book your in-person class session. (3) Attend the full instructor-led BLS course with an AHA Instructor — complete instruction, the written examination, and skills testing, following the current authorized course requirements. (4) Your official AHA BLS Provider eCard is issued through the authorized pathway once every requirement is met. No online license is involved in this course.",
     "bls": "(1) Pay $150 — the price includes your official HeartCode BLS online license, your in-person skills session, and your AHA BLS Provider eCard; there is no additional charge for the skills session or the eCard. (2) Once your payment is confirmed by our server, your unique HeartCode access code appears in My Courses. (3) Complete the official AHA online course at eLearning.heart.org. (4) Upload your AHA completion certificate here — your instructor verifies it through the official AHA verification service. (5) Book your included in-person skills session. (6) Pass the practice, evaluation, and skills testing; your roster is submitted through our Training Site arrangement, and your official eCard is issued.",
+    "acls": "(1) Enroll and pay $318. (2) Your HeartCode ACLS Online course is assigned to you through AHA Training Central — watch your email for your course assignment from the American Heart Association. (3) Complete the online course at eLearning.heart.org: self-directed learning content, probes, and cognitive assessment activities, including the course exam (84% to pass). (4) Training Central issues your AHA certificate of completion for the online portion. This listing is the online course only — the official AHA ACLS Provider eCard requires a separate hands-on skills session with an AHA ACLS Instructor, which is not included in this price.",
+    "pals": "(1) Enroll and pay $318. (2) Your HeartCode PALS Online course is assigned to you through AHA Training Central — watch your email for your course assignment from the American Heart Association. (3) Complete the online course at eLearning.heart.org: the PALS precourse self-assessment, self-directed learning content, probes, and cognitive assessment activities, including the course exam (84% to pass). (4) Training Central issues your AHA certificate of completion for the online portion. This listing is the online course only — the official AHA PALS Provider eCard requires a separate hands-on skills session with an AHA PALS Instructor, which is not included in this price.",
     "bls-skills": "This is the hands-on finish for students who already completed the official AHA HeartCode BLS online course on their own. Enroll, book your skills session, and upload your official AHA completion certificate — your instructor verifies the completion record before skills testing. Pass the evaluation and your official AHA BLS Provider eCard is issued through the authorized pathway. The $80 covers the skills session and the eCard process; no online license is included or charged.",
     "heartsaver-cpr-aed": "(1) Complete the online modules in order — adult CPR and AED first, then child and infant add-ons — and pass the 15-question assessment (80% to pass). (2) Book your hands-on skills session. (3) Your instructor verifies your skills in person — then your certificate is issued here.",
     "pediatric": "(1) Complete the online modules in order and pass the 15-question assessment (80% to pass). (2) Book your hands-on skills session. (3) Your instructor verifies your skills in person, including child and infant CPR — then your certificate is issued here.",
@@ -150,6 +158,8 @@ POLICY_VERSION = "2026-10-21-v1"  # All-sales-final + rescheduling terms version
 PREREQUISITES = {
     "bls-instructor-led": "None — the complete course is taught in person, including the examination and skills testing.",
     "bls": "You need internet access to complete the official AHA HeartCode BLS online course at eLearning.heart.org before your skills session. Designed for healthcare providers and students in clinical programs.",
+    "acls": "Current BLS Provider status and internet access to complete the online course at eLearning.heart.org. Designed for healthcare professionals who direct or participate in the management of cardiopulmonary arrest and other cardiovascular emergencies.",
+    "pals": "Current BLS Provider status and internet access to complete the online course at eLearning.heart.org. Designed for healthcare professionals who respond to emergencies in infants and children.",
     "bls-skills": "You must have already completed BLS online coursework (with us or another program) and bring your completion record and a photo ID.",
     "heartsaver-cpr-aed": "None.",
     "pediatric": "None. Designed for childcare providers, teachers, coaches, and parents.",
@@ -167,6 +177,7 @@ CREDENTIAL_OFFERED = {
     "skills_only": "Your official AHA BLS Provider eCard (valid two years). The $80 includes the skills evaluation and the eCard process, issued through the authorized AHA pathway after we verify your official online completion and you pass the skills evaluation.",
     "aha_blended": "Your official American Heart Association BLS Provider eCard (valid two years), issued through the authorized AHA pathway after you complete the included HeartCode BLS online course and pass your in-person skills evaluation. The $150 includes the online license, the skills session, and the eCard — no additional charge.",
     "instructor_led": "Your official American Heart Association BLS Provider eCard (valid two years), issued through the authorized AHA pathway after the complete instructor-led course, written examination, and skills testing.",
+    "aha_online": "Your official American Heart Association certificate of completion for the online portion, issued through AHA Training Central when you finish the online course. This online course does not by itself issue a Provider eCard — the eCard requires a separate hands-on skills session with an AHA Instructor.",
 }
 
 COURSE_BY_ID = {c["id"]: c for c in COURSES}
@@ -175,7 +186,7 @@ def course_workflow(course):
     return course.get("workflow", "blended")
 
 def requires_skills(course):
-    return course_workflow(course) != "online_only"
+    return course_workflow(course) not in ("online_only", "aha_online")
 
 def is_skills_only(course):
     return course_workflow(course) == "skills_only"
@@ -195,7 +206,7 @@ def is_official(course):
 # arrangement — the BLS eCard pathway above plus the Heartsaver line. The
 # remaining courses are developed by Don't Be Ordinary CPR and carry the
 # independent-course wording.
-OFFICIAL_LANGUAGE_IDS = OFFICIAL_COURSES | {"heartsaver-cpr-aed", "pediatric", "first-aid"}
+OFFICIAL_LANGUAGE_IDS = OFFICIAL_COURSES | {"heartsaver-cpr-aed", "pediatric", "first-aid", "acls", "pals"}
 
 def is_official_language(course):
     return course["id"] in OFFICIAL_LANGUAGE_IDS
@@ -568,7 +579,7 @@ def my_courses():
             _course = find_course(e["course_id"])
             rows.append({"e": e, "course": _course, "workflow": course_workflow(_course),
                          "license": license_of(store, e),
-                         "total": 0 if (direct_booking(_course) or course_workflow(_course) == "aha_blended") else len(course_modules(_course)),
+                         "total": 0 if (direct_booking(_course) or course_workflow(_course) in ("aha_blended", "aha_online")) else len(course_modules(_course)),
                          "label": STATUS_LABELS.get(e["status"], e["status"]), "booking": booking})
     return render_template("my.html", student=student, rows=rows)
 

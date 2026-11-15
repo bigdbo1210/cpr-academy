@@ -241,6 +241,11 @@ course purchase and official credential workflows should be built.
   Debo's same-day audit of the live site verified $130). Shaken Baby
   Syndrome increases **$70 → $95**. All other Academy prices = published
   site prices. The $95 site edit was sent to the UENI editor 2026-10-20.
+- **Price update (Derrick, 2026-11-01) — SUPERSEDES the BLS line above:**
+  BLS is now **$150**. Derrick confirmed "150 it is" after the live
+  platform (cpr-academy.onrender.com) was verified showing BLS online
+  $150 and BLS Instructor-Led (in person) $150. Read every earlier
+  "BLS $130" reference in this blueprint as $150 from this date.
 - **Affiliation status (Derrick, 2026-10-20):** "Independent / not sure."
   Open fact-finding: what credential do his students receive today, and who
   issues it? AHA eCards cannot be issued off an instructor's own videos —
