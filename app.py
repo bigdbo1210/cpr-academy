@@ -92,64 +92,74 @@ INSTRUCTOR_USER = "ddennis"
 INSTRUCTOR_PASSWORD = os.environ.get("ACADEMY_INSTRUCTOR_PASSWORD", "academy123")  # set ACADEMY_INSTRUCTOR_PASSWORD in production
 
 # -----------------------------
-# Course catalog (Derrick's real menu + locked prices, 2026-10-20)
+# Course catalog (Derrick's real menu; names/prices aligned to the live
+# Stripe catalog 2026-11-22 — Bucket A wording + Bucket B prices)
 # -----------------------------
 
 COURSES = [
-    {"id": "bls", "name": "BLS for Healthcare Providers", "price": 150, "bank": "cpr", "workflow": "aha_blended",
-     "tag": "AHA blended — HeartCode online + in-person skills session",
-     "blurb": "HeartCode BLS Online is the online portion of BLS blended learning that will adequately prepare students for hands-on practice and testing of BLS skills. It uses a variety of eLearning assets such as dramatizations, animations, self-directed learning, and interactive activities to teach students BLS knowledge and skills. This listing includes the HeartCode BLS Online license, your in-person skills session with an AHA Instructor, and your AHA BLS Provider eCard — all included in the $150 price, with no extra charge for the skills session or eCard."},
-    {"id": "bls-skills", "name": "BLS Skills Check-Off", "price": 80, "bank": "cpr", "workflow": "skills_only",
-     "tag": "Skills session only",
-     "blurb": "This is the hands-on skills session for HeartCode BLS blended learning. HeartCode BLS Online is the online portion of BLS blended learning that will adequately prepare students for hands-on practice and testing of BLS skills. If you have already completed HeartCode BLS Online on your own, book this session to complete your hands-on practice and skills testing with an AHA Instructor. Successful completion of both a HeartCode Online course and a hands-on skills session is required to receive an American Heart Association course completion eCard, valid for two years."},
-    {"id": "bls-instructor-led", "name": "BLS Instructor-Led (Full Course, In Person)", "price": 150, "bank": "cpr", "workflow": "instructor_led",
-     "tag": "Instructor-led — full course in person, no online portion",
-     "blurb": "The Association's BLS Provider Course trains participants to promptly recognize and respond to several life-threatening emergencies, perform high-quality CPR, and provide early use of an AED. The 2025 course has been updated to reflect new science in the 2025 American Heart Association Guidelines for CPR and ECC. The BLS Provider Course teaches rescue techniques for adults, children (1 year to puberty), and infants (younger than 1 year, excluding the newly born). The Association's BLS Provider Course is designed for healthcare professionals and trained first responders who provide care to patients in a wide variety of settings, as well as individuals enrolled in healthcare training programs."},
-    {"id": "acls", "name": "HeartCode ACLS Online", "price": 318, "bank": "cpr", "workflow": "aha_online",
-     "tag": "AHA blended — HeartCode online + in-person skills session",
-     "blurb": "HeartCode ACLS Online is the online portion of ACLS blended learning that will prepare students for hands-on practice and testing of skills. It uses a personalized adaptive algorithm that sets learners on the most efficient path to ACLS mastery. Students follow a continuously adapting learning path that is personalized by their own inputs: their performance, and their self-reported confidence level related to each probe. The course content is presented in the form of self-directed learning content, probes, and cognitive assessment activities. This listing includes the HeartCode ACLS Online license, your in-person skills session with an AHA Instructor, and your AHA ACLS Provider eCard — all included in the $318 price, with no extra charge for the skills session or eCard."},
-    {"id": "pals", "name": "HeartCode PALS Online", "price": 318, "bank": "cpr", "workflow": "aha_online",
-     "tag": "AHA blended — HeartCode online + in-person skills session",
-     "blurb": "HeartCode PALS Online is the online portion of PALS blended learning that will prepare students for hands-on practice and testing of PALS skills. It uses a personalized adaptive algorithm that sets students on the most efficient path to PALS mastery. Students follow a continuously adapting learning path that is personalized by their own inputs: their performance, and their self-reported confidence level related to each probe. The course content is presented in the form of self-directed learning content, probes, and cognitive assessment activities. This listing includes the HeartCode PALS Online license, your in-person skills session with an AHA Instructor, and your AHA PALS Provider eCard — all included in the $318 price, with no extra charge for the skills session or eCard."},
-    {"id": "heartsaver-cpr-aed", "name": "Heartsaver CPR AED", "price": 160, "bank": "cpr", "workflow": "blended",
-     "tag": "Blended: online + skills session",
-     "blurb": "Heartsaver® CPR AED Online is a self-directed course that provides the highest quality training in the lifesaving skills of CPR and how to use an AED. This course is designed for anyone with little or no medical training who needs CPR training and a course completion card for job, regulatory (eg, OSHA), or other requirements. Heartsaver courses can also be taken by anyone who wants to be prepared to act in an emergency."},
-    {"id": "pediatric", "name": "Heartsaver Pediatric First Aid CPR AED", "price": 160, "bank": "cpr", "workflow": "blended",
-     "tag": "Blended: online + skills session",
-     "blurb": "Heartsaver® Pediatric First Aid CPR AED Online is a self-directed course that provides the highest quality training in the lifesaving skills of first aid, CPR, and how to use an AED. The course is intended for those involved in childcare who must be prepared to respond to illnesses and injuries in a child or infant in the first few minutes until professional help arrives."},
-    {"id": "first-aid", "name": "Heartsaver First Aid Training", "price": 100, "bank": "knowledge", "workflow": "blended",
-     "tag": "Blended: online + skills session",
-     "blurb": "Heartsaver® First Aid Online is a self-directed course that provides students the highest quality training in the lifesaving skills of first aid. This course is designed for anyone with little or no medical training who needs first aid training and a course completion card for job, regulatory (eg, OSHA), or other requirements. Heartsaver courses can also be taken by anyone who wants to be prepared to act in an emergency."},
-    {"id": "aed", "name": "AED Training", "price": 100, "bank": "cpr", "workflow": "blended",
-     "tag": "Blended: online + skills session",
+    {"id": "bls", "name": "BLS Provider (Blended)", "price": 173, "bank": "cpr", "workflow": "aha_blended",
+     "tag": "Blended learning — HeartCode online portion + hands-on skills session",
+     "blurb": "HeartCode BLS Online is the online portion of BLS blended learning that will adequately prepare students for hands-on practice and testing of BLS skills. It uses a variety of eLearning assets such as dramatizations, animations, self-directed learning, and interactive activities to teach students BLS knowledge and skills. This listing includes the HeartCode BLS Online license, the BLS Provider Manual eBook (included, and required course material), your hands-on skills session with an AHA Instructor, and your AHA BLS Provider eCard — all included in the $173 price, with no extra charge for the skills session or eCard."},
+    {"id": "bls-skills", "name": "BLS Skills Check-Off", "price": 83, "bank": "cpr", "workflow": "skills_only",
+     "tag": "Hands-on skills session only",
+     "blurb": "This is the hands-on skills session for HeartCode BLS blended learning. HeartCode BLS Online is the online portion of BLS blended learning that will adequately prepare students for hands-on practice and testing of BLS skills. If you have already completed HeartCode BLS Online on your own, book this session to complete your hands-on practice and skills testing with an AHA Instructor. Successful completion of both a HeartCode Online course and a hands-on skills session is required to receive an American Heart Association course completion eCard, valid for two years. No online license and no eBook are included with this session."},
+    {"id": "bls-instructor-led", "name": "BLS Instructor-Led", "price": 173, "bank": "cpr", "workflow": "instructor_led",
+     "tag": "Instructor-Led Training — full course in person, no online portion",
+     "blurb": "The Association's BLS Provider Course trains participants to promptly recognize and respond to several life-threatening emergencies, perform high-quality CPR, and provide early use of an AED. The 2025 course has been updated to reflect new science in the 2025 American Heart Association Guidelines for CPR and ECC. The BLS Provider Course teaches rescue techniques for adults, children (1 year to puberty), and infants (younger than 1 year, excluding the newly born). The Association's BLS Provider Course is designed for healthcare professionals and trained first responders who provide care to patients in a wide variety of settings, as well as individuals enrolled in healthcare training programs. The $173 price includes the BLS Provider Manual eBook — included, and required course material."},
+    {"id": "acls", "name": "ACLS", "price": 328, "bank": "cpr", "workflow": "aha_online",
+     "tag": "Blended learning — HeartCode online portion + hands-on skills session",
+     "blurb": "HeartCode ACLS Online is the online portion of ACLS blended learning that will prepare students for hands-on practice and testing of skills. It uses a personalized adaptive algorithm that sets learners on the most efficient path to ACLS mastery. Students follow a continuously adapting learning path that is personalized by their own inputs: their performance, and their self-reported confidence level related to each probe. The course content is presented in the form of self-directed learning content, probes, and cognitive assessment activities. This listing includes the HeartCode ACLS Online license (the ACLS Provider Manual eBook is included inside the HeartCode course — nothing extra to buy), your hands-on skills session with an AHA Instructor, and your AHA ACLS Provider eCard — all included in the $328 price, with no extra charge for the skills session or eCard."},
+    {"id": "pals", "name": "PALS", "price": 328, "bank": "cpr", "workflow": "aha_online",
+     "tag": "Blended learning — HeartCode online portion + hands-on skills session",
+     "blurb": "HeartCode PALS Online is the online portion of PALS blended learning that will prepare students for hands-on practice and testing of PALS skills. It uses a personalized adaptive algorithm that sets students on the most efficient path to PALS mastery. Students follow a continuously adapting learning path that is personalized by their own inputs: their performance, and their self-reported confidence level related to each probe. The course content is presented in the form of self-directed learning content, probes, and cognitive assessment activities. This listing includes the HeartCode PALS Online license (the PALS Provider Manual eBook is included inside the HeartCode course — nothing extra to buy), your hands-on skills session with an AHA Instructor, and your AHA PALS Provider eCard — all included in the $328 price, with no extra charge for the skills session or eCard."},
+    {"id": "heartsaver-cpr-aed", "name": "Heartsaver CPR AED", "price": 169, "bank": "cpr", "workflow": "blended",
+     "tag": "Blended learning — online portion + hands-on skills session",
+     "credential": "Your official American Heart Association Heartsaver eCard (valid two years), issued through the authorized AHA pathway after you complete the online course and pass your hands-on skills session. The $169 includes the online course, the course eBook, the skills session, and the eCard — no additional charge.",
+     "blurb": "Heartsaver® CPR AED Online is a self-directed course that provides the highest quality training in the lifesaving skills of CPR and how to use an AED. This course is designed for anyone with little or no medical training who needs CPR training and a course completion card for job, regulatory (eg, OSHA), or other requirements. Heartsaver courses can also be taken by anyone who wants to be prepared to act in an emergency. This listing includes the online course, the Heartsaver course eBook (included, and required course material), your hands-on skills session with an AHA Instructor, and your AHA eCard — all included in the $169 price."},
+    {"id": "pediatric", "name": "Heartsaver Pediatric", "price": 169, "bank": "cpr", "workflow": "blended",
+     "tag": "Blended learning — online portion + hands-on skills session",
+     "credential": "Your official American Heart Association Heartsaver eCard (valid two years), issued through the authorized AHA pathway after you complete the online course and pass your hands-on skills session. The $169 includes the online course, the course eBook, the skills session, and the eCard — no additional charge.",
+     "blurb": "Heartsaver® Pediatric First Aid CPR AED Online is a self-directed course that provides the highest quality training in the lifesaving skills of first aid, CPR, and how to use an AED. The course is intended for those involved in childcare who must be prepared to respond to illnesses and injuries in a child or infant in the first few minutes until professional help arrives. This listing includes the online course, the Heartsaver course eBook (included, and required course material), your hands-on skills session with an AHA Instructor, and your AHA eCard — all included in the $169 price."},
+    {"id": "heartsaver-combined", "name": "Heartsaver First Aid CPR AED (Combined)", "price": 160, "bank": "cpr", "workflow": "blended",
+     "tag": "Blended learning — online portion + hands-on skills session",
+     "credential": "Your official American Heart Association Heartsaver eCard (valid two years), issued through the authorized AHA pathway after you complete the online course and pass your hands-on skills session. The $160 includes the online course, the course eBook, the skills session, and the eCard — no additional charge.",
+     "blurb": "The complete Heartsaver package in one course: Heartsaver First Aid together with Heartsaver CPR AED — first aid, CPR, and AED training for adults, children, and infants, in a single enrollment instead of two separate courses. It is designed for anyone with little or no medical training who needs the full course completion card for job, regulatory (eg, OSHA), or other requirements, and for anyone who wants to be prepared to act in an emergency. This listing includes the online course, the Heartsaver course eBook (included, and required course material), your hands-on skills session with an AHA Instructor, and your AHA eCard — all included in the $160 price."},
+    {"id": "first-aid", "name": "Heartsaver First Aid", "price": 107, "bank": "knowledge", "workflow": "blended",
+     "tag": "Online course — no hands-on skills session",
+     "credential": "Your official American Heart Association Heartsaver First Aid eCard (valid two years), issued through the authorized AHA pathway once you complete the course requirements. The $107 includes the online course and the eCard — no additional charge.",
+     "blurb": "Heartsaver® First Aid Online is a self-directed course that provides students the highest quality training in the lifesaving skills of first aid. This course is designed for anyone with little or no medical training who needs first aid training and a course completion card for job, regulatory (eg, OSHA), or other requirements. Heartsaver courses can also be taken by anyone who wants to be prepared to act in an emergency. This listing includes the online course and your AHA eCard — all included in the $107 price."},
+    {"id": "aed", "name": "AED Training", "price": 104, "bank": "cpr", "workflow": "blended",
+     "tag": "Online course — no hands-on skills session",
+     "credential": "A Don't Be Ordinary CPR, AED & First Aid Training, LLC online course-completion certificate with a unique verification code. This is not an AHA eCard.",
      "blurb": "Focused AED training: how an AED works, pad placement, safety, special situations, and confident, fast response when someone collapses."},
-    {"id": "babysitter", "name": "Babysitters & Nanny Training", "price": 160, "bank": "knowledge", "workflow": "blended",
-     "tag": "Blended: online + skills session",
+    {"id": "babysitter", "name": "Babysitters & Nanny", "price": 166, "bank": "knowledge", "workflow": "blended",
+     "tag": "Blended learning — online portion + hands-on skills session",
      "blurb": "Safety, first aid, and emergency confidence for the people families trust with their children — the skills babysitters and nannies actually use on the job."},
-    {"id": "shaken-baby", "name": "Shaken Baby Syndrome / Abusive Head Trauma", "price": 95, "bank": "knowledge",
+    {"id": "shaken-baby", "name": "Shaken Baby Prevention", "price": 99, "bank": "knowledge",
      "workflow": "online_only",
-     "tag": "Online course — no skills session",
+     "tag": "Online course — no hands-on skills session",
      "blurb": "Recognize, prevent, and respond to abusive head trauma — required knowledge for childcare professionals, foster and kinship caregivers, and parents."},
-    {"id": "osha", "name": "OSHA Bloodborne Pathogens", "price": 90, "bank": "knowledge", "workflow": "online_only",
-     "tag": "Online only — no skills session",
+    {"id": "osha", "name": "Heartsaver Bloodborne Pathogens", "price": 93, "bank": "knowledge", "workflow": "online_only",
+     "tag": "Online course — no hands-on skills session",
      "blurb": "Heartsaver® Bloodborne Pathogens is designed to meet Occupational Safety and Health Administration (OSHA) requirements for bloodborne pathogens training when paired with site-specific instruction. Bloodborne Pathogens Online is a self-directed course that uses interactive lessons to teach you comprehensive skills for protecting, acting, cleaning, and telling as it relates to practical application for dealing with bloodborne pathogens. Bloodborne pathogens training is an annual requirement — plan to retake it each year."},
-    {"id": "instructor", "name": "CPR Instructor Course", "price": 600, "bank": "knowledge", "workflow": "blended",
+    {"id": "instructor", "name": "BLS Instructor Course", "price": 619, "bank": "knowledge", "workflow": "blended",
      "tag": "Instructor pathway",
-     "blurb": "Teach what you know. The pathway to leading CPR and first aid classes of your own — with coaching practice and monitored teaching."},
+     "blurb": "Teach what you know. This is the American Heart Association BLS Instructor pathway — BLS Instructor Essentials, coaching practice, and monitored teaching — the route to leading BLS classes of your own. The $619 price includes the printed BLS Instructor manual."},
 ]
 HOW_IT_WORKS = {
-    "bls-instructor-led": "(1) Enroll and pay $150. (2) Book your in-person class session. (3) Attend the full instructor-led BLS course with an AHA Instructor — complete instruction, the written examination, and skills testing, following the current authorized course requirements. (4) Your official AHA BLS Provider eCard is issued through the authorized pathway once every requirement is met. No online license is involved in this course.",
-    "bls": "(1) Pay $150 — the price includes your official HeartCode BLS online license, your in-person skills session, and your AHA BLS Provider eCard; there is no additional charge for the skills session or the eCard. (2) Once your payment is confirmed by our server, your unique HeartCode access code appears in My Courses. (3) Complete the official AHA online course at eLearning.heart.org. (4) Upload your AHA completion certificate here — your instructor verifies it through the official AHA verification service. (5) Book your included in-person skills session. (6) Pass the practice, evaluation, and skills testing; your roster is submitted through our Training Site arrangement, and your official eCard is issued.",
-    "acls": "(1) Enroll and pay $318 — the price includes your official HeartCode ACLS Online license, your in-person skills session, and your AHA ACLS Provider eCard; there is no additional charge for the skills session or the eCard. (2) Your HeartCode ACLS Online course is assigned to you through AHA Training Central — watch your email for your course assignment from the American Heart Association. (3) Complete the online course at eLearning.heart.org: self-directed learning content, probes, and cognitive assessment activities, including the course exam (84% to pass). (4) Book your included in-person skills session with an AHA Instructor and pass the hands-on practice and skills testing. (5) Your official AHA ACLS Provider eCard is issued once you have successfully completed both parts — the online course and the in-person skills session — and is valid for two years.",
-    "pals": "(1) Enroll and pay $318 — the price includes your official HeartCode PALS Online license, your in-person skills session, and your AHA PALS Provider eCard; there is no additional charge for the skills session or the eCard. (2) Your HeartCode PALS Online course is assigned to you through AHA Training Central — watch your email for your course assignment from the American Heart Association. (3) Complete the online course at eLearning.heart.org: the PALS precourse self-assessment, self-directed learning content, probes, and cognitive assessment activities, including the course exam (84% to pass). (4) Book your included in-person skills session with an AHA Instructor and pass the hands-on practice and skills testing. (5) Your official AHA PALS Provider eCard is issued once you have successfully completed both parts — the online course and the in-person skills session — and is valid for two years.",
-    "bls-skills": "This is the hands-on finish for students who already completed the official AHA HeartCode BLS online course on their own. Enroll, book your skills session, and upload your official AHA completion certificate — your instructor verifies the completion record before skills testing. Pass the evaluation and your official AHA BLS Provider eCard is issued through the authorized pathway. The $80 covers the skills session and the eCard process; no online license is included or charged.",
-    "heartsaver-cpr-aed": "(1) Complete the online modules in order — adult CPR and AED first, then child and infant add-ons — and pass the 15-question assessment (80% to pass). (2) Book your hands-on skills session. (3) Your instructor verifies your skills in person — then your certificate is issued here.",
-    "pediatric": "(1) Complete the online modules in order and pass the 15-question assessment (80% to pass). (2) Book your hands-on skills session. (3) Your instructor verifies your skills in person, including child and infant CPR — then your certificate is issued here.",
-    "first-aid": "(1) Complete the online modules in order and pass the 15-question assessment (80% to pass). (2) Book your hands-on skills session, where you will practice glove removal, finding the problem, using an epinephrine pen trainer, and controlling bleeding. (3) Your instructor verifies your skills — then your certificate is issued here.",
-    "aed": "(1) Complete the online modules in order and pass the 10-question assessment (80% to pass). (2) Book your hands-on skills session and run live AED drills with your instructor. (3) Once your instructor verifies your skills, your certificate is issued here.",
-    "babysitter": "(1) Complete the online modules in order and pass the 15-question assessment (80% to pass). (2) Book your in-person session for hands-on practice and review with your instructor. (3) Once that session is verified, your certificate is issued here.",
-    "shaken-baby": "this course is 100% online — there is no in-person appointment. Complete the three modules in order and pass the 10-question assessment (80% to pass), and your certificate is issued immediately, verifiable by its code.",
-    "osha": "this course is 100% online — there is no in-person appointment. Complete the four modules in order and pass the 10-question assessment (80% to pass), and your certificate is issued immediately. Bloodborne pathogens training is an annual requirement — plan to retake it each year.",
+    "bls-instructor-led": "(1) Enroll and pay $173 — the price includes the BLS Provider Manual eBook, which is included and required course material. (2) Book your instructor-led class session. (3) Attend the full instructor-led BLS course with an AHA Instructor — complete instruction, the written examination, and skills testing, following the current authorized course requirements. (4) Your official AHA BLS Provider eCard is issued through the authorized pathway once every requirement is met. No online license is involved in this course.",
+    "bls": "(1) Pay $173 — the price includes your official HeartCode BLS online license, the BLS Provider Manual eBook (included and required), your hands-on skills session, and your AHA BLS Provider eCard; there is no additional charge for the skills session or the eCard. (2) Once your payment is confirmed by our server, your unique HeartCode access code appears in My Courses. (3) Complete the official AHA online course at eLearning.heart.org. (4) Upload your AHA completion certificate here — your instructor verifies it through the official AHA verification service. (5) Book your included hands-on skills session. (6) Pass the hands-on practice and skills testing; your roster is submitted through our Training Site arrangement, and your official eCard is issued.",
+    "acls": "(1) Enroll and pay $328 — the price includes your official HeartCode ACLS Online license (the ACLS Provider Manual eBook is included inside the HeartCode course), your hands-on skills session, and your AHA ACLS Provider eCard; there is no additional charge for the skills session or the eCard. (2) Your HeartCode ACLS Online course is assigned to you through AHA Training Central — watch your email for your course assignment from the American Heart Association. (3) Complete the online course at eLearning.heart.org: self-directed learning content, probes, and cognitive assessment activities, including the course exam (84% to pass). (4) Book your included hands-on skills session with an AHA Instructor and pass the hands-on practice and skills testing. (5) Your official AHA ACLS Provider eCard is issued once you have successfully completed both parts — the online course and the hands-on skills session — and is valid for two years.",
+    "pals": "(1) Enroll and pay $328 — the price includes your official HeartCode PALS Online license (the PALS Provider Manual eBook is included inside the HeartCode course), your hands-on skills session, and your AHA PALS Provider eCard; there is no additional charge for the skills session or the eCard. (2) Your HeartCode PALS Online course is assigned to you through AHA Training Central — watch your email for your course assignment from the American Heart Association. (3) Complete the online course at eLearning.heart.org: the PALS precourse self-assessment, self-directed learning content, probes, and cognitive assessment activities, including the course exam (84% to pass). (4) Book your included hands-on skills session with an AHA Instructor and pass the hands-on practice and skills testing. (5) Your official AHA PALS Provider eCard is issued once you have successfully completed both parts — the online course and the hands-on skills session — and is valid for two years.",
+    "bls-skills": "This is the hands-on finish for students who already completed the official AHA HeartCode BLS online course on their own. Enroll, book your hands-on skills session, and upload your official AHA completion certificate — your instructor verifies the completion record before skills testing. Pass the hands-on skills session and your official AHA BLS Provider eCard is issued through the authorized pathway. The $83 covers the skills session and the eCard process; no online license is included or charged, and no eBook is included.",
+    "heartsaver-cpr-aed": "(1) Complete the online modules in order — adult CPR and AED first, then child and infant add-ons — and pass the 15-question assessment (80% to pass). Your Heartsaver course eBook is included with your enrollment and is required course material. (2) Book your hands-on skills session — it is included in your price. (3) Your instructor verifies your skills in person — then your official AHA eCard is issued through the American Heart Association.",
+    "pediatric": "(1) Complete the online modules in order and pass the 15-question assessment (80% to pass). Your Heartsaver course eBook is included with your enrollment and is required course material. (2) Book your hands-on skills session — it is included in your price. (3) Your instructor verifies your skills in person, including child and infant CPR — then your official AHA eCard is issued through the American Heart Association.",
+    "heartsaver-combined": "(1) Complete the online modules in order — the CPR AED modules first, then the first aid modules — and pass the 30-question assessment (80% to pass). Your Heartsaver course eBook is included with your enrollment and is required course material. (2) Book your hands-on skills session — it is included in your price. (3) Your instructor verifies your skills in person — then your official AHA eCard is issued through the American Heart Association.",
+    "first-aid": "(1) Complete the online modules in order and pass the 15-question assessment (80% to pass). (2) Once you have completed the course requirements, your official AHA Heartsaver First Aid eCard is issued through the American Heart Association.",
+    "aed": "(1) Complete the online modules in order and pass the 10-question assessment (80% to pass). This course is completed entirely online — there is no hands-on skills session or skills assessment. (2) Once you pass the assessment, your certificate is issued here.",
+    "babysitter": "(1) Complete the online modules in order and pass the 15-question assessment (80% to pass). (2) Book your hands-on skills session for practice and review with your instructor. (3) Once that session is verified, your certificate is issued here.",
+    "shaken-baby": "this course is 100% online — there is no hands-on skills session. Complete the three modules in order and pass the 10-question assessment (80% to pass), and your certificate is issued immediately, verifiable by its code.",
+    "osha": "this course is 100% online — there is no hands-on skills session. Complete the four modules in order and pass the 10-question assessment (80% to pass), and your certificate is issued immediately. Bloodborne pathogens training is an annual requirement — plan to retake it each year.",
     "instructor": "(1) Complete the online modules in order and pass the 15-question assessment (80% to pass). (2) Book your in-person instructor session, which includes coaching practice and monitored teaching. (3) Once your instructor session is verified, your certificate is issued here.",
 }
 
@@ -157,27 +167,28 @@ POLICY_VERSION = "2026-10-21-v1"  # All-sales-final + rescheduling terms version
 
 PREREQUISITES = {
     "bls-instructor-led": "None — the complete course is taught in person, including the examination and skills testing.",
-    "bls": "You need internet access to complete the official AHA HeartCode BLS online course at eLearning.heart.org before your skills session. Designed for healthcare providers and students in clinical programs.",
+    "bls": "You need internet access to complete the official AHA HeartCode BLS online course at eLearning.heart.org before your hands-on skills session. Designed for healthcare providers and students in clinical programs.",
     "acls": "A current BLS Provider card is required. This course is built for providers who are already proficient in BLS skills: you should be able to recognize common cardiac rhythms, read and interpret ECGs, and understand ACLS pharmacology before you begin. You also need internet access to complete the online course at eLearning.heart.org. Designed for healthcare professionals who direct or participate in the management of cardiopulmonary arrest and other cardiovascular emergencies.",
     "pals": "Current BLS Provider status and internet access to complete the online course at eLearning.heart.org. Designed for healthcare professionals who respond to emergencies in infants and children.",
     "bls-skills": "You must have already completed BLS online coursework (with us or another program) and bring your completion record and a photo ID.",
     "heartsaver-cpr-aed": "None.",
     "pediatric": "None. Designed for childcare providers, teachers, coaches, and parents.",
+    "heartsaver-combined": "None.",
     "first-aid": "None.",
     "aed": "None.",
     "babysitter": "Designed for ages 11 and up who care for children.",
     "shaken-baby": "None. Designed for childcare professionals, foster/kinship caregivers, and parents.",
     "osha": "None. Your employer remains responsible for site-specific training under OSHA's standard; OSHA does not certify students.",
-    "instructor": "Current provider-level CPR certification and instructor pathway approval required.",
+    "instructor": "Current AHA BLS Provider certification and instructor pathway approval required.",
 }
 
 CREDENTIAL_OFFERED = {
     "online_only": "A Don't Be Ordinary CPR, AED & First Aid Training, LLC online course-completion certificate with a unique verification code. This is not an AHA eCard.",
     "blended": "A Don't Be Ordinary CPR, AED & First Aid Training, LLC course-completion certificate, issued after your instructor verifies your hands-on skills in person. This is not an AHA eCard.",
-    "skills_only": "Your official AHA BLS Provider eCard (valid two years). The $80 includes the skills evaluation and the eCard process, issued through the authorized AHA pathway after we verify your official online completion and you pass the skills evaluation.",
-    "aha_blended": "Your official American Heart Association BLS Provider eCard (valid two years), issued through the authorized AHA pathway after you complete the included HeartCode BLS online course and pass your in-person skills evaluation. The $150 includes the online license, the skills session, and the eCard — no additional charge.",
-    "instructor_led": "Your official American Heart Association BLS Provider eCard (valid two years), issued through the authorized AHA pathway after the complete instructor-led course, written examination, and skills testing.",
-    "aha_online": "Your official American Heart Association Provider eCard (valid two years), issued through the authorized AHA pathway after you complete the included HeartCode online course and pass your in-person skills evaluation. The $318 includes the online license, the skills session, and the eCard — no additional charge.",
+    "skills_only": "Your official AHA BLS Provider eCard (valid two years). The $83 includes the hands-on skills session and the eCard process, issued through the authorized AHA pathway after we verify your official online completion and you pass the hands-on skills session. No online license and no eBook are included.",
+    "aha_blended": "Your official American Heart Association BLS Provider eCard (valid two years), issued through the authorized AHA pathway after you complete the included HeartCode BLS online course and pass your hands-on skills session. The $173 includes the online license, the BLS Provider Manual eBook (included and required), the skills session, and the eCard — no additional charge.",
+    "instructor_led": "Your official American Heart Association BLS Provider eCard (valid two years), issued through the authorized AHA pathway after the complete instructor-led course, written examination, and skills testing. The BLS Provider Manual eBook is included in the course price and is required course material.",
+    "aha_online": "Your official American Heart Association Provider eCard (valid two years), issued through the authorized AHA pathway after you complete the included HeartCode online course and pass your hands-on skills session. The $328 includes the online license (with the Provider Manual eBook inside the HeartCode course), the skills session, and the eCard — no additional charge.",
 }
 
 COURSE_BY_ID = {c["id"]: c for c in COURSES}
@@ -206,7 +217,7 @@ def is_official(course):
 # arrangement — the BLS eCard pathway above plus the Heartsaver line. The
 # remaining courses are developed by Don't Be Ordinary CPR and carry the
 # independent-course wording.
-OFFICIAL_LANGUAGE_IDS = OFFICIAL_COURSES | {"heartsaver-cpr-aed", "pediatric", "first-aid", "acls", "pals"}
+OFFICIAL_LANGUAGE_IDS = OFFICIAL_COURSES | {"heartsaver-cpr-aed", "pediatric", "heartsaver-combined", "first-aid", "acls", "pals"}
 
 def is_official_language(course):
     return course["id"] in OFFICIAL_LANGUAGE_IDS
@@ -421,14 +432,14 @@ if os.environ.get("ACADEMY_SEED_DEMO") == "1" or not os.path.exists(DATA_FILE):
 STATUS_LABELS = {
     "ENROLLED": "Enrolled — ready to learn",
     "LEARNING": "Learning in progress",
-    "ONLINE_COMPLETE": "Online complete — book your skills session",
+    "ONLINE_COMPLETE": "Online complete — book your hands-on skills session",
     "SKILLS_BOOKED": "Skills session booked",
     "SKILLS_PASSED": "Skills verified by instructor",
     "COMPLETE": "Course complete",
     "AWAITING_LICENSE": "Access code being assigned — it will appear in My Courses",
     "LICENSE_ASSIGNED": "HeartCode access code assigned — complete your AHA online course",
     "COMPLETION_SUBMITTED": "Completion certificate submitted — awaiting instructor verification",
-    "VERIFIED": "AHA completion verified — book your skills session",
+    "VERIFIED": "AHA completion verified — book your hands-on skills session",
     "ECARD_ISSUED": "Official AHA eCard issued",
     "PENDING_PAYMENT": "Payment pending — complete checkout to activate your course",
     "REFUNDED": "Refunded — access suspended (contact us with questions)",
@@ -457,13 +468,13 @@ def course_detail(cid):
     if not course:
         return "Course not found", 404
     if not course.get("enrollment_open", True):
-        flash("Registration for the CPR Instructor Course is not open yet — it is in final preparation. Call (502) 835-8535 to be notified.")
+        flash(f"Registration for {course['name']} is not open yet — it is in final preparation. Call (502) 835-8535 to be notified.")
     return render_template("course.html", course=course,
                            official_aha=is_official_language(course),
                            how=HOW_IT_WORKS.get(cid, ""),
                            workflow=course_workflow(course),
                            prereq=PREREQUISITES.get(cid, ""),
-                           credential=CREDENTIAL_OFFERED[course_workflow(course)],
+                           credential=course.get("credential") or CREDENTIAL_OFFERED[course_workflow(course)],
                            policy_version=POLICY_VERSION)
 
 @app.route("/enroll/<cid>", methods=["POST"])

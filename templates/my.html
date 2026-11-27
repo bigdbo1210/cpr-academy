@@ -39,7 +39,7 @@ code { background: #f0ece1; padding: 1px 6px; border-radius: 4px; font-size: 13p
         <p style="margin:7px 0 0; line-height:1.6;">Your HeartCode BLS access code is being assigned and will appear here. (We never promise instant delivery — codes come from purchased license inventory.) Questions: (502) 835-8535.</p>
         {% elif r.license and r.e.status in ('LICENSE_ASSIGNED', 'COMPLETION_SUBMITTED', 'VERIFIED', 'SKILLS_BOOKED', 'SKILLS_PASSED', 'ECARD_ISSUED') %}
         <p style="margin:7px 0 0; line-height:1.6;">Your HeartCode BLS access {% if r.license.kind == 'url' %}link{% else %}code{% endif %}: <code style="font-size:14px;">{{ r.license.code }}</code>{% if r.license.is_sample %}<br><em>Sample code for demonstration — not a real AHA license.</em>{% endif %}<br>
-        1) Go to <strong>eLearning.heart.org</strong> and redeem your code to start the official AHA online course. 2) Finish the online course and download your AHA completion certificate. 3) Upload it below — your instructor verifies it, and your included skills session unlocks.</p>
+        1) Go to <strong>eLearning.heart.org</strong> and redeem your code to start the official AHA online course. 2) Finish the online course and download your AHA completion certificate. 3) Upload it below — your instructor verifies it, and your included hands-on skills session unlocks.</p>
         {% if r.e.status in ('LICENSE_ASSIGNED', 'COMPLETION_SUBMITTED') %}
         <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload_completion', eid=r.e.id) }}" style="margin-top:9px;">
             <label>Upload your AHA completion certificate (PDF or image)</label>
@@ -54,7 +54,7 @@ code { background: #f0ece1; padding: 1px 6px; border-radius: 4px; font-size: 13p
     {% endif %}
     {% if r.e.course_id == 'bls-skills' and not r.e.completion_verified %}
     <div style="background:#faf7ef; border:1px solid #e4ddcf; border-radius:10px; padding:13px 15px; margin-top:12px;">
-        <strong>Before your skills session:</strong> upload your official AHA HeartCode BLS completion certificate — your instructor must verify it before your skills can be marked complete.
+        <strong>Before your hands-on skills session:</strong> upload your official AHA HeartCode BLS completion certificate — your instructor must verify it before your skills can be marked complete.
         <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload_completion', eid=r.e.id) }}" style="margin-top:9px;">
             <input type="file" name="certificate" accept=".pdf,.png,.jpg,.jpeg" required>
             <button class="btn" type="submit" style="margin-top:8px;">Upload AHA Completion Certificate</button>
