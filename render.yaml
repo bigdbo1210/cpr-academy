@@ -10,7 +10,9 @@ services:
       - key: ACADEMY_DEBUG
         value: "0"
       - key: ACADEMY_PAYMENTS
-        value: "off"
+        value: "live"
+      - key: ACADEMY_TEST_CHARGE_CENTS
+        sync: false
       - key: STRIPE_SECRET_KEY
         sync: false
       - key: STRIPE_WEBHOOK_SECRET

@@ -83,6 +83,21 @@ PAYMENTS_MODE = os.environ.get("ACADEMY_PAYMENTS", "off")
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
 STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
 
+# $1-test support: when ACADEMY_TEST_CHARGE_CENTS is set to a positive
+# integer (e.g. "100"), EVERY checkout charges that amount instead of the
+# catalog price, and the Stripe product name is tagged "— TEST CHARGE".
+# Intended only for a brief live smoke test: set it, redeploy, run the
+# test charge, refund it, then DELETE the variable and redeploy.
+def _test_charge_cents():
+    raw = os.environ.get("ACADEMY_TEST_CHARGE_CENTS", "").strip()
+    try:
+        value = int(raw)
+    except ValueError:
+        return None
+    return value if value > 0 else None
+
+TEST_CHARGE_CENTS = _test_charge_cents()
+
 def _stripe():
     import stripe  # lazy import: the app runs fine without the package in off mode
     stripe.api_key = STRIPE_SECRET_KEY
@@ -470,6 +485,8 @@ def course_detail(cid):
     if not course.get("enrollment_open", True):
         flash(f"Registration for {course['name']} is not open yet — it is in final preparation. Call (502) 835-8535 to be notified.")
     return render_template("course.html", course=course,
+                           payments_mode=PAYMENTS_MODE,
+                           test_charge_cents=TEST_CHARGE_CENTS,
                            official_aha=is_official_language(course),
                            how=HOW_IT_WORKS.get(cid, ""),
                            workflow=course_workflow(course),
@@ -501,12 +518,15 @@ def enroll(cid):
         if not student:
             student = {"id": new_id("STU"), "name": name, "email": email, "created_at": now_iso()}
             store["students"].append(student)
+        charge_cents = TEST_CHARGE_CENTS if TEST_CHARGE_CENTS else int(course["price"]) * 100
+        product_name = course["name"] + (" — TEST CHARGE" if TEST_CHARGE_CENTS else "")
         pending = {
             "id": new_id("ENR"), "student_id": student["id"], "course_id": cid,
             "status": "PENDING_PAYMENT", "modules_done": [], "quiz_score": None,
             "cert_code": None, "created_at": now_iso(), "completed_at": None, "skills": None,
             "policy_version": POLICY_VERSION, "policy_accepted_at": now_iso(),
             "payment_status": "pending",
+            "expected_amount_cents": charge_cents,
         }
         store["enrollments"].append(pending)
         save_store(store)
@@ -517,8 +537,8 @@ def enroll(cid):
                 mode="payment",
                 line_items=[{"price_data": {
                     "currency": "usd",
-                    "product_data": {"name": course["name"]},
-                    "unit_amount": int(course["price"]) * 100,
+                    "product_data": {"name": product_name},
+                    "unit_amount": charge_cents,
                 }, "quantity": 1}],
                 metadata={"enrollment_id": pending["id"], "course_id": cid},
                 success_url=request.host_url.rstrip("/") + "/billing/success",
@@ -797,9 +817,10 @@ def stripe_webhook():
         eid = (obj.get("metadata") or {}).get("enrollment_id")
         e = find_enrollment(store, eid) if eid else None
         course = find_course(e["course_id"]) if e else None
+        expected_cents = (e.get("expected_amount_cents") if e else None) or (int(course["price"]) * 100 if course else None)
         if (e and course and obj.get("payment_status") == "paid"
                 and obj.get("currency") == "usd"
-                and obj.get("amount_total") == int(course["price"]) * 100):
+                and obj.get("amount_total") == expected_cents):
             e["status"] = "ENROLLED"
             e["payment_status"] = "paid"
             if course_workflow(course) == "aha_blended":
